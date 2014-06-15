@@ -83,7 +83,6 @@ com_crashlytics_export_strings.xml
 .mtj.tmp/
 
 # Package Files #
-*.jar
 *.war
 *.ear
 
