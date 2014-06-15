@@ -1,6 +1,8 @@
 Freebox v6 Monitor
 ==================
 
+[![Build Status](https://travis-ci.org/Drusy/freebox-v6-monitor.svg?branch=master)](https://travis-ci.org/Drusy/freebox-v6-monitor)
+
 Desktop application for freebox revolution monitoring. This application is using API v2 (http://dev.freebox.fr/sdk/os/) of the Freebox.
 
 The goal is to provide an easy and productive monitoring board. This is not an alternative to the local web application, it will simply allow you to configure flexible alerts following rules.
