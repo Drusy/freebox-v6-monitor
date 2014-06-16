@@ -16,24 +16,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class HttpUtils {
 	private static final List<Listener> listeners = new CopyOnWriteArrayList<Listener>();
-	private static String referer = "http://aurelienribon-dev.com/unknown";
-
-	/**
-	 * Sets the referer used when accessing a remote file.
-	 * Defaults to "http://aurelienribon-dev.com/unknown".
-	 */
-	public static void setReferer(String referer) {
-		HttpUtils.referer = referer;
-	}
-
-	/**
-	 * Gets the referer used when accessing a remote file.
-	 * Defaults to "http://aurelienribon-dev.com/unknown".
-	 */
-	public static String getReferer() {
-		return referer;
-	}
-
 	/**
 	 * Asynchronously downloads the file located at the given url. Content is
 	 * written to the given stream. If the url is malformed, the method returns
@@ -162,7 +144,6 @@ public class HttpUtils {
 
 				try {
 					HttpURLConnection connection = (HttpURLConnection) input.openConnection();
-					if (referer != null) connection.addRequestProperty("REFERER", referer);
 					connection.setDoInput(true);
 					connection.setDoOutput(false);
 					connection.setUseCaches(true);
