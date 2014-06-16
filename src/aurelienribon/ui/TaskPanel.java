@@ -86,8 +86,8 @@ public class TaskPanel extends JPanel {
 		final DownloadTile tile = new DownloadTile(task);
 		Style.registerCssClasses(tile, ".tile");
 		if (style != null) Style.apply(tile, style, styleStack);
-
-		tile.setLocation(getNextTileX() + getWidth(), 2);
+        
+        tile.setLocation(getNextTileX() + getWidth(), 2);
 
 		Tween.to(tile, SLAnimator.ComponentAccessor.X, 2)
 			.target(getNextTileX())
@@ -137,17 +137,17 @@ public class TaskPanel extends JPanel {
 		private final JLabel logoLabel = new JLabel();
 		private final JLabel titleLabel = new JLabel();
 		private final JLabel stateLabel = new JLabel();
-		private final JLabel cancelLabel = new JLabel(Res.getImage("gfx/ic_cancel.png"));
+		private final JLabel cancelLabel = new JLabel(Res.getImage("img/ic_cancel.png"));
 
 		public DownloadTile(final DownloadTask task) {
 			setBackground(Color.LIGHT_GRAY);
 			setLayout(null);
 			setSize(200, 26);
 
-			if (task.getTag().startsWith("Master")) logoLabel.setIcon(Res.getImage("gfx/ic24_cog.png"));
-			else if (task.getTag().startsWith("Def")) logoLabel.setIcon(Res.getImage("gfx/ic24_file.png"));
-			else if (task.getTag().startsWith("Version")) logoLabel.setIcon(Res.getImage("gfx/ic24_cog.png"));
-			else logoLabel.setIcon(Res.getImage("gfx/ic24_download.png"));
+			if (task.getTag().startsWith("Master")) logoLabel.setIcon(Res.getImage("img/ic24_cog.png"));
+			else if (task.getTag().startsWith("Def")) logoLabel.setIcon(Res.getImage("img/ic24_file.png"));
+			else if (task.getTag().startsWith("Version")) logoLabel.setIcon(Res.getImage("img/ic24_cog.png"));
+			else logoLabel.setIcon(Res.getImage("img/ic24_download.png"));
 
 			logoLabel.setBounds(0, 1, 24, 24);
 			titleLabel.setText(task.getTag());

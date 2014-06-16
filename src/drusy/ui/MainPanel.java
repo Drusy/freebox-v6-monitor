@@ -8,12 +8,15 @@ import aurelienribon.ui.TaskPanel;
 import aurelienribon.ui.components.Button;
 import aurelienribon.ui.components.PaintedPanel;
 import aurelienribon.ui.css.Style;
+import aurelienribon.utils.HttpUtils;
 import aurelienribon.utils.Res;
 import aurelienribon.utils.SwingUtils;
+import drusy.utils.Config;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.ByteArrayOutputStream;
 
 import static aurelienribon.slidinglayout.SLSide.*;
 
@@ -51,6 +54,15 @@ public class MainPanel extends PaintedPanel {
 		SwingUtils.addWindowListener(this, new WindowAdapter() {
 			@Override
 			public void windowOpened(WindowEvent e) {
+                // Download test
+                final ByteArrayOutputStream output = new ByteArrayOutputStream();
+                HttpUtils.DownloadTask task =  HttpUtils.downloadAsync(Config.VERSION_DISTANT_FILE, output, "Checking version");
+
+                task.addListener(new HttpUtils.DownloadListener() {
+                    @Override public void onComplete() {
+                        System.out.println("Ended");
+                    }
+                });
 			}
 
 			@Override
