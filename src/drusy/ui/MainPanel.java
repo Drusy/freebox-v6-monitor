@@ -12,10 +12,12 @@ import aurelienribon.utils.HttpUtils;
 import aurelienribon.utils.Res;
 import aurelienribon.utils.SwingUtils;
 import drusy.utils.Config;
+import drusy.utils.Log;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.Arc2D;
 import java.io.ByteArrayOutputStream;
 
 import static aurelienribon.slidinglayout.SLSide.*;
@@ -54,13 +56,19 @@ public class MainPanel extends PaintedPanel {
 		SwingUtils.addWindowListener(this, new WindowAdapter() {
 			@Override
 			public void windowOpened(WindowEvent e) {
-                // Download test
+                // Check Version
                 final ByteArrayOutputStream output = new ByteArrayOutputStream();
-                HttpUtils.DownloadTask task =  HttpUtils.downloadAsync(Config.VERSION_DISTANT_FILE, output, "Checking version");
+                HttpUtils.DownloadTask task = HttpUtils.downloadAsync(Config.VERSION_DISTANT_FILE, output, "Checking version");
 
                 task.addListener(new HttpUtils.DownloadListener() {
                     @Override public void onComplete() {
-                        System.out.println("Ended");
+                        float lastVersion = Float.parseFloat(output.toString());
+
+                        if (lastVersion < Config.CURRENT_VERSION) {
+                            Log.Debug("Version Checker", "Last version is " + lastVersion + " (current " + Config.CURRENT_VERSION + ")");
+                        } else {
+                            Log.Debug("Version Checker", "Last version installed");
+                        }
                     }
                 });
 			}

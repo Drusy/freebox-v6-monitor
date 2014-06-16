@@ -86,7 +86,7 @@ public class TaskPanel extends JPanel {
 		final DownloadTile tile = new DownloadTile(task);
 		Style.registerCssClasses(tile, ".tile");
 		if (style != null) Style.apply(tile, style, styleStack);
-        
+
         tile.setLocation(getNextTileX() + getWidth(), 2);
 
 		Tween.to(tile, SLAnimator.ComponentAccessor.X, 2)
