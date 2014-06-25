@@ -8,24 +8,30 @@ import aurelienribon.ui.TaskPanel;
 import aurelienribon.ui.components.Button;
 import aurelienribon.ui.components.PaintedPanel;
 import aurelienribon.ui.css.Style;
-import aurelienribon.utils.HttpUtils;
 import aurelienribon.utils.Res;
 import aurelienribon.utils.SwingUtils;
 import drusy.utils.Checker;
 import drusy.utils.Config;
-import drusy.utils.Log;
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.web.WebView;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.Arc2D;
-import java.io.ByteArrayOutputStream;
+import java.util.*;
 
 import static aurelienribon.slidinglayout.SLSide.*;
 
 public class MainPanel extends PaintedPanel {
 	// Panels
     private final TaskPanel taskPanel = new TaskPanel();
+
+    // WebView
+    private JFXPanel webViewPanel = new JFXPanel();
+    private WebView webView;
 
 	// Start panel components
 	private final JLabel startLogoLabel = new JLabel(Res.getImage("img/freebox-v6-monitor-logo.png"));
@@ -44,6 +50,20 @@ public class MainPanel extends PaintedPanel {
 		SwingUtils.importFont(Res.getStream("fonts/SquareFont.ttf"));
 		setLayout(new BorderLayout());
 		add(rootPanel, BorderLayout.CENTER);
+
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                webViewPanel = new JFXPanel();
+                BorderPane borderPane = new BorderPane();
+                webView = new WebView();
+                borderPane.setCenter(webView);
+                Scene scene = new Scene(borderPane,450,450);
+                webViewPanel.setScene(scene);
+                webView.getEngine().load(Config.FREEBOX_URL);
+            }
+        });
+        Platform.setImplicitExit(false);
 
 		initUI();
 		initStyle();
@@ -71,14 +91,14 @@ public class MainPanel extends PaintedPanel {
 		startMonitorBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                showSetupView();
+                showMonitorView();
             }
         });
 
 		startWebviewBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                showUpdateView();
+                showWebView();
             }
         });
 
@@ -148,6 +168,7 @@ public class MainPanel extends PaintedPanel {
 		webviewCfg = new SLConfig(rootPanel)
             .gap(gap, gap)
             .row(1f).row(30).col(1f)
+            .place(0, 0, webViewPanel)
             .beginGrid(1, 0)
                 .row(1f).col(100).col(1f)
                 .place(0, 0, changeModeBtn)
@@ -155,7 +176,7 @@ public class MainPanel extends PaintedPanel {
             .endGrid();
 	}
 
-	public void showSetupView() {
+	public void showMonitorView() {
 		rootPanel.createTransition()
 			.push(new SLKeyframe(monitorCfg, transitionDuration)
 				.setStartSideForNewCmps(RIGHT)
@@ -164,7 +185,7 @@ public class MainPanel extends PaintedPanel {
 			.play();
 	}
 
-	public void showUpdateView() {
+	public void showWebView() {
 		rootPanel.createTransition()
 			.push(new SLKeyframe(webviewCfg, transitionDuration)
 				.setStartSideForNewCmps(RIGHT)
