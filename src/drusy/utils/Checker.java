@@ -1,6 +1,7 @@
 package drusy.utils;
 
 import aurelienribon.utils.HttpUtils;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 
@@ -24,11 +25,18 @@ public class Checker {
 
     public static void CheckFreeboxUp() {
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
-        HttpUtils.DownloadTask task = HttpUtils.downloadAsync(Config.FREEBOX_API_VERSION_URL, output, "Checking freebox");
+        HttpUtils.DownloadTask task = HttpUtils.downloadAsync(Config.FREEBOX_API_CHECK_URL, output, "Checking freebox");
 
         task.addListener(new HttpUtils.DownloadListener() {
             @Override public void onComplete() {
-                Log.Debug("Freebox Checker", "Freebox is UP and API version is : " + output.toString());
+                String json = output.toString();
+                JSONObject obj = new JSONObject(json);
+                boolean success = obj.getBoolean("success");
+                JSONObject result = obj.getJSONObject("result");
+                boolean loggedIn = result.getBoolean("logged_in");
+
+                if (success == true)
+                Log.Debug("Freebox Checker", "Freebox is UP (logged_in : " + loggedIn + ")");
             }
         });
     }
