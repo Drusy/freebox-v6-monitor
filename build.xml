@@ -6,7 +6,7 @@
 
 	<property name="version" value="1.0" />
 	<property name="name" value="freebox-v6-monitor" />
-	<property name="mainClass" value="fr.drusy.Main" />
+	<property name="mainClass" value="drusy.Main" />
 
 	<!-- ****************************************************************** -->
 	<!-- Build tasks -->
