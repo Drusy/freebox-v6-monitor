@@ -147,7 +147,7 @@ public class HttpUtils {
 					connection.setDoInput(true);
 					connection.setDoOutput(false);
 					connection.setUseCaches(true);
-					connection.setConnectTimeout(3000);
+					connection.setConnectTimeout(5000);
 					connection.connect();
 
 					is = new BufferedInputStream(connection.getInputStream(), 4096);

@@ -153,7 +153,7 @@ public class TaskPanel extends JPanel {
 			titleLabel.setText(task.getTag());
 			titleLabel.setVerticalAlignment(SwingConstants.TOP);
 			titleLabel.setBounds(29, 0, getWidth()-30, getHeight());
-			stateLabel.setText("0 / ?? (?%)");
+			stateLabel.setText("0 octet");
 			stateLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 			stateLabel.setBounds(29, 0, getWidth()-30, getHeight());
 			cancelLabel.setBounds(199-16, 0, 16, 16);
@@ -176,9 +176,9 @@ public class TaskPanel extends JPanel {
 			int percent = totalSize > 0 ? (int) (100 * ((float)currentSize / totalSize)) : -1;
 
 			if (percent >= 0) {
-				stateLabel.setText(currentSize + " / " + totalSize + " (" + percent + "%)");
+				stateLabel.setText(currentSize + " octets (" + percent + "%)");
 			} else {
-				stateLabel.setText(currentSize + " / ?? (?%)");
+				stateLabel.setText(currentSize + " octets");
 			}
 		}
 

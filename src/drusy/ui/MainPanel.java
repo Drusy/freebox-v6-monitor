@@ -11,6 +11,7 @@ import aurelienribon.ui.css.Style;
 import aurelienribon.utils.HttpUtils;
 import aurelienribon.utils.Res;
 import aurelienribon.utils.SwingUtils;
+import drusy.utils.Checker;
 import drusy.utils.Config;
 import drusy.utils.Log;
 
@@ -56,22 +57,9 @@ public class MainPanel extends PaintedPanel {
 		SwingUtils.addWindowListener(this, new WindowAdapter() {
 			@Override
 			public void windowOpened(WindowEvent e) {
-                // Check Version
-                final ByteArrayOutputStream output = new ByteArrayOutputStream();
-                HttpUtils.DownloadTask task = HttpUtils.downloadAsync(Config.VERSION_DISTANT_FILE, output, "Checking version");
-
-                task.addListener(new HttpUtils.DownloadListener() {
-                    @Override public void onComplete() {
-                        float lastVersion = Float.parseFloat(output.toString());
-
-                        if (lastVersion < Config.CURRENT_VERSION) {
-                            Log.Debug("Version Checker", "Last version is " + lastVersion + " (current " + Config.CURRENT_VERSION + ")");
-                        } else {
-                            Log.Debug("Version Checker", "Last version installed");
-                        }
-                    }
-                });
-			}
+                Checker.CheckVersion();
+                Checker.CheckFreeboxUp();
+            }
 
 			@Override
 			public void windowClosing(WindowEvent e) {
