@@ -2,6 +2,9 @@ package drusy;
 
 import aurelienribon.ui.components.ArStyle;
 import aurelienribon.ui.css.swing.SwingStyle;
+import aurelienribon.utils.DialogUtils;
+import aurelienribon.utils.SwingUtils;
+import drusy.ui.ErrorDialog;
 import drusy.ui.MainPanel;
 import drusy.utils.Config;
 
@@ -25,7 +28,7 @@ public class Main {
 
 				JFrame frame = new JFrame("Freebox v6 Monitor");
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				frame.setContentPane(new MainPanel());
+				frame.setContentPane(new MainPanel(frame));
 				frame.setSize(Config.APP_WITH, Config.APP_HEIGHT);
                 frame.setMinimumSize(new Dimension(Config.APP_WITH, Config.APP_HEIGHT));
 				frame.setLocationRelativeTo(null);

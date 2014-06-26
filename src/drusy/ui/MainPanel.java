@@ -28,6 +28,7 @@ import static aurelienribon.slidinglayout.SLSide.*;
 public class MainPanel extends PaintedPanel {
 	// Panels
     private final TaskPanel taskPanel = new TaskPanel();
+    JFrame parentFrame;
 
     // WebView
     private JFXPanel webViewPanel = new JFXPanel();
@@ -46,10 +47,11 @@ public class MainPanel extends PaintedPanel {
 	private final float transitionDuration = 0.5f;
 	private final int gap = 10;
 
-	public MainPanel() {
+	public MainPanel(JFrame frame) {
 		SwingUtils.importFont(Res.getStream("fonts/SquareFont.ttf"));
 		setLayout(new BorderLayout());
 		add(rootPanel, BorderLayout.CENTER);
+        parentFrame = frame;
 
         Platform.runLater(new Runnable() {
             @Override
@@ -74,11 +76,11 @@ public class MainPanel extends PaintedPanel {
 		rootPanel.setTweenManager(SLAnimator.createTweenManager());
 		taskPanel.setTweenManager(SLAnimator.createTweenManager());
 
-		SwingUtils.addWindowListener(this, new WindowAdapter() {
+        SwingUtils.addWindowListener(this, new WindowAdapter() {
 			@Override
 			public void windowOpened(WindowEvent e) {
                 Checker.CheckVersion();
-                Checker.CheckFreeboxUp();
+                Checker.CheckFreeboxUp(parentFrame);
             }
 
 			@Override

@@ -1,9 +1,13 @@
 package drusy.utils;
 
+import aurelienribon.utils.DialogUtils;
 import aurelienribon.utils.HttpUtils;
+import drusy.ui.ErrorDialog;
 import org.json.JSONObject;
 
+import javax.swing.*;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 public class Checker {
     public static void CheckVersion() {
@@ -23,7 +27,7 @@ public class Checker {
         });
     }
 
-    public static void CheckFreeboxUp() {
+    public static void CheckFreeboxUp(final JFrame frame) {
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
         HttpUtils.DownloadTask task = HttpUtils.downloadAsync(Config.FREEBOX_API_CHECK_URL, output, "Checking freebox");
 
@@ -35,8 +39,17 @@ public class Checker {
                 JSONObject result = obj.getJSONObject("result");
                 boolean loggedIn = result.getBoolean("logged_in");
 
-                if (success == true)
-                Log.Debug("Freebox Checker", "Freebox is UP (logged_in : " + loggedIn + ")");
+                if (success == true) {
+                    Log.Debug("Freebox Checker", "Freebox is UP (logged_in : " + loggedIn + ")");
+                }
+            }
+        });
+
+        task.addListener(new HttpUtils.DownloadListener() {
+            @Override
+            public void onError(IOException ex) {
+                ErrorDialog dialog = new ErrorDialog(frame);
+                DialogUtils.fadeIn(dialog);
             }
         });
     }
