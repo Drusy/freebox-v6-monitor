@@ -10,7 +10,9 @@ import aurelienribon.ui.components.PaintedPanel;
 import aurelienribon.ui.css.Style;
 import aurelienribon.utils.Res;
 import aurelienribon.utils.SwingUtils;
+import aurelienribon.utils.VersionLabel;
 import drusy.utils.Checker;
+import drusy.utils.Config;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,6 +31,8 @@ public class MainPanel extends PaintedPanel {
 	private final Button startWebviewBtn = new Button() {{setText("Webview");}};
 
 	// Misc components
+    private final UpdateLabel updateLabel = new UpdateLabel();
+    private final VersionLabel versionLabel = new VersionLabel();
 	private final Button changeModeBtn = new Button() {{setText("Back");}};
 
 	// SlidingLayout
@@ -42,6 +46,9 @@ public class MainPanel extends PaintedPanel {
 		add(rootPanel, BorderLayout.CENTER);
         parentFrame = frame;
 
+        versionLabel.initAndCheck(String.valueOf(Config.CURRENT_VERSION), Config.VERSION_DISTANT_FILE,
+                Config.DOWNLOAD_URL);
+
 		initUI();
 		initStyle();
 		initConfigurations();
@@ -52,12 +59,10 @@ public class MainPanel extends PaintedPanel {
 		taskPanel.setTweenManager(SLAnimator.createTweenManager());
 
 
-
-
         SwingUtils.addWindowListener(this, new WindowAdapter() {
 			@Override
 			public void windowOpened(WindowEvent e) {
-                Checker.CheckVersion();
+                //Checker.CheckVersion();
                 Checker.CheckFreeboxUp(parentFrame);
             }
 
@@ -88,6 +93,18 @@ public class MainPanel extends PaintedPanel {
                 showInitView();
             }
         });
+
+        JLabel aboutLabel = new JLabel("About this app >");
+        Style.registerCssClasses(aboutLabel, ".linkLabel");
+        aboutLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        versionLabel.setLayout(new BorderLayout());
+        versionLabel.add(aboutLabel, BorderLayout.EAST);
+
+        aboutLabel.addMouseListener(new MouseAdapter() {
+            @Override public void mousePressed(MouseEvent e) {
+                //showAboutPanel();
+            }
+        });
 	}
 
 	// -------------------------------------------------------------------------
@@ -99,9 +116,10 @@ public class MainPanel extends PaintedPanel {
 		Style.registerCssClasses(startMonitorBtn, ".startButton");
 		Style.registerCssClasses(startWebviewBtn, ".startButton");
 		Style.registerCssClasses(changeModeBtn, ".bold", ".center");
+        Style.registerCssClasses(versionLabel, ".versionLabel");
 
 		Component[] targets = new Component[] {
-			this, taskPanel, changeModeBtn, startMonitorBtn, startWebviewBtn
+			this, taskPanel, changeModeBtn, startMonitorBtn, startWebviewBtn, versionLabel
 		};
 
 		Style style = new Style(Res.getUrl("css/style.css"));
@@ -136,9 +154,27 @@ public class MainPanel extends PaintedPanel {
 			.endGrid()
 			.place(1, 0, taskPanel);
 
-		monitorCfg = new SLConfig(rootPanel)
+        monitorCfg = new SLConfig(rootPanel)
 			.gap(gap, gap)
-			.row(1f).row(30).col(1f)
+            .row(1f).row(30).col(1f)
+            .beginGrid(0, 0)
+                .row(1f).col(1f).col(1f).col(1f)
+                .beginGrid(0, 0)
+                    .row(versionLabel.getPreferredSize().height)
+                    .row(updateLabel.getPreferredSize().height)
+                    .col(1f)
+                    .place(0, 0, versionLabel)
+                    .place(1, 0, updateLabel)
+                .endGrid()
+                .beginGrid(0, 1)
+                    .row(1f)
+                    .col(1f)
+                .endGrid()
+                .beginGrid(0, 2)
+                    .row(1f)
+                    .col(1f)
+                .endGrid()
+            .endGrid()
 			.beginGrid(1, 0)
 				.row(1f).col(100).col(1f)
 				.place(0, 0, changeModeBtn)
@@ -156,11 +192,11 @@ public class MainPanel extends PaintedPanel {
 	}
 
 	public void showMonitorView() {
-		rootPanel.createTransition()
+        rootPanel.createTransition()
 			.push(new SLKeyframe(monitorCfg, transitionDuration)
-				.setStartSideForNewCmps(RIGHT)
-				.setStartSide(LEFT, changeModeBtn)
-				.setEndSideForOldCmps(LEFT))
+                    .setStartSideForNewCmps(RIGHT)
+                    .setStartSide(LEFT, changeModeBtn)
+                    .setEndSideForOldCmps(LEFT))
 			.play();
 	}
 

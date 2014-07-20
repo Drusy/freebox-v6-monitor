@@ -20,22 +20,20 @@ public class VersionLabel extends JLabel {
 	private String version;
 	private String checkUrl;
 	private String gotoUrl;
-	private String blockName;
 
 	/**
 	 * Convenience method to call both {@link #init} and {@link #check} methods.
 	 */
-	public void initAndCheck(String version, String blockName, String checkUrl, String gotoUrl) {
-		init(version, blockName, checkUrl, gotoUrl);
+	public void initAndCheck(String version, String checkUrl, String gotoUrl) {
+		init(version, checkUrl, gotoUrl);
 		check();
 	}
 
 	/**
 	 * Initializes the required parameters.
 	 */
-	public void init(String version, String blockName, String checkUrl, String gotoUrl) {
+	public void init(String version, String checkUrl, String gotoUrl) {
 		this.version = version;
-		this.blockName = blockName;
 		this.checkUrl = checkUrl;
 		this.gotoUrl = gotoUrl;
 		setText("v" + version);
@@ -54,7 +52,7 @@ public class VersionLabel extends JLabel {
 	 */
 	public void check() {
 		setText("v" + version + " (checking for updates)");
-		setIcon(Res.getImage("gfx/ic_loading.gif"));
+		setIcon(Res.getImage("img/ic_loading.gif"));
 		if (checkUrl == null) return;
 
 		final ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -66,34 +64,33 @@ public class VersionLabel extends JLabel {
 
 				try {
 					str = stream.toString("UTF-8");
-					if (blockName != null) str = ParseUtils.parseBlock(str, blockName, version);
 				} catch (UnsupportedEncodingException ex) {
 					throw new RuntimeException(ex);
 				}
 
-				List<String> versions = TextUtils.splitAndTrim(str);
-				int idx = versions.indexOf(version);
+                float lastVersion = Float.parseFloat(str);
+                float currentVersion = Float.parseFloat(version);
 
-				if (idx == 0) {
-					setText("v" + version + " (latest version)");
-					setIcon(Res.getImage("gfx/ic_ok.png"));
-					firePropertyChange("latest", false, true);
-				} else if (idx > 0) {
-					setText("v" + version + " (new version available! v" + versions.get(0) + ")");
-					setIcon(Res.getImage("gfx/ic_warning.png"));
-					SwingUtils.addBrowseBehavior(VersionLabel.this, gotoUrl);
-					firePropertyChange("newVersion", false, true);
-				} else {
-					setText("v" + version + " (update check error)");
-					setIcon(Res.getImage("gfx/ic_error.png"));
-					firePropertyChange("error", false, true);
-				}
+                if (currentVersion < lastVersion) {
+                    setText("v" + version + " (new version available! v" + lastVersion + ")");
+                    setIcon(Res.getImage("img/ic_update.png"));
+                    SwingUtils.addBrowseBehavior(VersionLabel.this, gotoUrl);
+                    firePropertyChange("newVersion", false, true);
+                } else if (lastVersion == currentVersion) {
+                    setText("v" + version + " (latest version)");
+                    setIcon(Res.getImage("img/ic_ok.png"));
+                    firePropertyChange("latest", false, true);
+                } else {
+                    setText("v" + version + " (update check error)");
+                    setIcon(Res.getImage("img/ic_error.png"));
+                    firePropertyChange("error", false, true);
+                }
 			}
 
 			@Override
 			public void onError(IOException ex) {
 				setText("v" + version + " (connection error)");
-				setIcon(Res.getImage("gfx/ic_error.png"));
+				setIcon(Res.getImage("img/ic_error.png"));
 				firePropertyChange("error", false, true);
 			}
 		};
