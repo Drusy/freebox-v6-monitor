@@ -11,6 +11,7 @@ import aurelienribon.ui.css.Style;
 import aurelienribon.utils.Res;
 import aurelienribon.utils.SwingUtils;
 import aurelienribon.utils.VersionLabel;
+import drusy.ui.panels.InternetStatePanel;
 import drusy.utils.Checker;
 import drusy.utils.Config;
 
@@ -23,7 +24,8 @@ import static aurelienribon.slidinglayout.SLSide.*;
 public class MainPanel extends PaintedPanel {
 	// Panels
     private final TaskPanel taskPanel = new TaskPanel();
-    JFrame parentFrame;
+    private JFrame parentFrame;
+    private InternetStatePanel internetStatePanel = new InternetStatePanel(this);
 
 	// Start panel components
 	private final JLabel startLogoLabel = new JLabel(Res.getImage("img/freebox-v6-monitor-logo.png"));
@@ -113,13 +115,15 @@ public class MainPanel extends PaintedPanel {
 
 	private void initStyle() {
 		Style.registerCssClasses(this, ".rootPanel");
+        Style.registerCssClasses(internetStatePanel, ".groupPanel", "#internetStatePanel");
 		Style.registerCssClasses(startMonitorBtn, ".startButton");
 		Style.registerCssClasses(startWebviewBtn, ".startButton");
 		Style.registerCssClasses(changeModeBtn, ".bold", ".center");
         Style.registerCssClasses(versionLabel, ".versionLabel");
+        Style.registerCssClasses(updateLabel, ".versionLabel");
 
 		Component[] targets = new Component[] {
-			this, taskPanel, changeModeBtn, startMonitorBtn, startWebviewBtn, versionLabel
+			this, taskPanel, changeModeBtn, startMonitorBtn, startWebviewBtn, versionLabel, updateLabel, internetStatePanel
 		};
 
 		Style style = new Style(Res.getUrl("css/style.css"));
@@ -160,11 +164,13 @@ public class MainPanel extends PaintedPanel {
             .beginGrid(0, 0)
                 .row(1f).col(1f).col(1f).col(1f)
                 .beginGrid(0, 0)
+                    .row(internetStatePanel.getPreferredSize().height)
                     .row(versionLabel.getPreferredSize().height)
                     .row(updateLabel.getPreferredSize().height)
                     .col(1f)
-                    .place(0, 0, versionLabel)
-                    .place(1, 0, updateLabel)
+                    .place(0, 0, internetStatePanel)
+                    .place(1, 0, versionLabel)
+                    .place(2, 0, updateLabel)
                 .endGrid()
                 .beginGrid(0, 1)
                     .row(1f)
@@ -192,6 +198,8 @@ public class MainPanel extends PaintedPanel {
 	}
 
 	public void showMonitorView() {
+        internetStatePanel.update();
+
         rootPanel.createTransition()
 			.push(new SLKeyframe(monitorCfg, transitionDuration)
                     .setStartSideForNewCmps(RIGHT)

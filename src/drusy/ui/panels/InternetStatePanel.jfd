@@ -1,0 +1,69 @@
+JFDML JFormDesigner: "5.2.0.0.109" Java: "1.7.0_40" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+			name: "this"
+			"minimumSize": new java.awt.Dimension( 100, 71 )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+				name: "headerPanel"
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label1"
+					"text": "This panel shows you an overview of the internet connection"
+					"horizontalAlignment": 0
+				}, new FormLayoutConstraints( class java.lang.String ) {
+					"value": "Center"
+				} )
+			}, new FormLayoutConstraints( class java.lang.String ) {
+				"value": "North"
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+				"$horizontalGroup": "par l {seq {space :::p, par t {comp uploadTitleLabel:::::p, comp downloadTitleLabel:::p::p, comp ipTitleLabel:::::p}, space :p:10:p, par l {comp ipContentLabel::l::452:x, comp uploadContentLabel::l::452:x, comp downloadContentLabel::l::452:x}, space :::p}}"
+				"$verticalGroup": "par l {seq l {space :p:20:p, par b {comp ipTitleLabel::b:p:22:p, comp ipContentLabel::b:p::p}, space :::p, par b {comp uploadTitleLabel::b:p:22:p, comp uploadContentLabel::b:p::p}, space :::p, par b {comp downloadTitleLabel::b:p:22:p, comp downloadContentLabel::b:p::p}, space :::p}}"
+			} ) {
+				name: "mainPanel"
+				"opaque": false
+				"minimumSize": new java.awt.Dimension( 100, 100 )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "ipTitleLabel"
+					"text": "IP v4 :"
+					"horizontalAlignment": 4
+				} )
+				add( new FormComponent( "javax.swing.JTextField" ) {
+					name: "ipContentLabel"
+					"editable": false
+					"text": "192.168.0.1"
+					"horizontalAlignment": 0
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "uploadTitleLabel"
+					"text": "Upload Bandwidth :"
+					"horizontalAlignment": 4
+				} )
+				add( new FormComponent( "javax.swing.JTextField" ) {
+					name: "uploadContentLabel"
+					"editable": false
+					"text": "250 ko/s"
+					"horizontalAlignment": 0
+				} )
+				add( new FormComponent( "javax.swing.JTextField" ) {
+					name: "downloadContentLabel"
+					"editable": false
+					"text": "1.2 mo/s"
+					"horizontalAlignment": 0
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "downloadTitleLabel"
+					"text": "Download Bandwidth :"
+					"horizontalAlignment": 4
+				} )
+			}, new FormLayoutConstraints( class java.lang.String ) {
+				"value": "Center"
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 390, 285 )
+		} )
+	}
+}

@@ -73,7 +73,7 @@ public class VersionLabel extends JLabel {
 
                 if (currentVersion < lastVersion) {
                     setText("v" + version + " (new version available! v" + lastVersion + ")");
-                    setIcon(Res.getImage("img/ic_update.png"));
+                    setIcon(Res.getImage("img/ic_download.png"));
                     SwingUtils.addBrowseBehavior(VersionLabel.this, gotoUrl);
                     firePropertyChange("newVersion", false, true);
                 } else if (lastVersion == currentVersion) {
