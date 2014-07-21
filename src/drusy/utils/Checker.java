@@ -12,7 +12,7 @@ import java.io.IOException;
 public class Checker {
     public static void CheckVersion() {
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
-        HttpUtils.DownloadTask task = HttpUtils.downloadAsync(Config.VERSION_DISTANT_FILE, output, "Checking version");
+        HttpUtils.DownloadGetTask task = HttpUtils.downloadGetAsync(Config.VERSION_DISTANT_FILE, output, "Checking version");
 
         task.addListener(new HttpUtils.DownloadListener() {
             @Override public void onComplete() {
@@ -29,7 +29,7 @@ public class Checker {
 
     public static void CheckFreeboxUp(final JFrame frame) {
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
-        HttpUtils.DownloadTask task = HttpUtils.downloadAsync(Config.FREEBOX_API_CHECK_URL, output, "Checking freebox");
+        HttpUtils.DownloadGetTask task = HttpUtils.downloadGetAsync(Config.FREEBOX_API_CHECK_URL, output, "Checking freebox");
 
         task.addListener(new HttpUtils.DownloadListener() {
             @Override public void onComplete() {
@@ -41,6 +41,7 @@ public class Checker {
 
                 if (success == true) {
                     Log.Debug("Freebox Checker", "Freebox is UP (logged_in : " + loggedIn + ")");
+                    FreeboxConnector.TokenRequest();
                 }
             }
         });

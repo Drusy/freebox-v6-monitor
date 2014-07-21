@@ -10,7 +10,6 @@ import aurelienribon.ui.css.*;
 import aurelienribon.ui.css.swing.SwingProperties;
 import aurelienribon.utils.HttpUtils;
 import aurelienribon.utils.HttpUtils.DownloadListener;
-import aurelienribon.utils.HttpUtils.DownloadTask;
 import aurelienribon.utils.Res;
 
 import javax.swing.*;
@@ -40,7 +39,7 @@ public class TaskPanel extends JPanel {
 
 		HttpUtils.addListener(new HttpUtils.Listener() {
             @Override
-            public void newDownload(DownloadTask task) {
+            public void newDownload(HttpUtils.DownloadTask task) {
                 addDownloadTile(task);
             }
         });
@@ -82,7 +81,7 @@ public class TaskPanel extends JPanel {
 	// Helpers
 	// -------------------------------------------------------------------------
 
-	private void addDownloadTile(DownloadTask task) {
+	private void addDownloadTile(HttpUtils.DownloadTask task) {
 		final DownloadTile tile = new DownloadTile(task);
 		Style.registerCssClasses(tile, ".tile");
 		if (style != null) Style.apply(tile, style, styleStack);
@@ -139,7 +138,7 @@ public class TaskPanel extends JPanel {
 		private final JLabel stateLabel = new JLabel();
 		private final JLabel cancelLabel = new JLabel(Res.getImage("img/ic_cancel.png"));
 
-		public DownloadTile(final DownloadTask task) {
+		public DownloadTile(final HttpUtils.DownloadTask task) {
 			setBackground(Color.LIGHT_GRAY);
 			setLayout(null);
 			setSize(200, 26);

@@ -8,7 +8,6 @@ import java.awt.event.ActionListener;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.List;
 
 /**
  * A special label used to display the current version of the project. The
@@ -96,7 +95,7 @@ public class VersionLabel extends JLabel {
 		};
 
 		Timer timer = new Timer(2000, new ActionListener() {@Override public void actionPerformed(ActionEvent e) {
-			HttpUtils.downloadAsync(checkUrl, stream, "Version number").addListener(listener);
+			HttpUtils.downloadGetAsync(checkUrl, stream, "Version number").addListener(listener);
 		}});
 		timer.setRepeats(false);
 		timer.start();

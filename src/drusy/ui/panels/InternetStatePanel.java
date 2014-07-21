@@ -5,9 +5,7 @@
 package drusy.ui.panels;
 
 import aurelienribon.ui.css.Style;
-import aurelienribon.utils.DialogUtils;
 import aurelienribon.utils.HttpUtils;
-import drusy.ui.ErrorDialog;
 import drusy.ui.MainPanel;
 import drusy.utils.Config;
 import drusy.utils.Log;
@@ -34,7 +32,7 @@ public class InternetStatePanel extends JPanel {
 
     public void update() {
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
-        HttpUtils.DownloadTask task = HttpUtils.downloadAsync(Config.FREEBOX_API_CONNECTION, output, "Fetching connection state");
+        HttpUtils.DownloadGetTask task = HttpUtils.downloadGetAsync(Config.FREEBOX_API_CONNECTION, output, "Fetching connection state");
 
         task.addListener(new HttpUtils.DownloadListener() {
             @Override public void onComplete() {
