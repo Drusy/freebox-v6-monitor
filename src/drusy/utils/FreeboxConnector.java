@@ -13,6 +13,7 @@ import java.net.UnknownHostException;
 import java.util.Properties;
 
 public class FreeboxConnector {
+    private static String SessionToken = "";
 
     public static void Connect(JFrame frame) {
         Properties properties = Config.ReadProperties();
@@ -38,8 +39,9 @@ public class FreeboxConnector {
                 Log.Debug("Freebox Connector - TrackAuthorizationProgress", output.toString());
 
                 if (success == true) {
-                    if (status.equals("timeout")) {
+                    if (status.equals("timeout") || status.equals("unknown")) {
                         Config.ClearConfigFile();
+                        Connect(frame);
                     } else if (!status.equals("granted")) {
                         final WaitingGrantDialog dialog = new WaitingGrantDialog(frame);;
                         SwingUtilities.invokeLater(new Runnable() {
@@ -49,6 +51,8 @@ public class FreeboxConnector {
                         });
 
                         WaitForUserGrant(track_id, dialog, frame);
+                    } else {
+                        RetrieveChallenge();
                     }
                 }
             }
@@ -73,11 +77,11 @@ public class FreeboxConnector {
                 JSONObject result = obj.getJSONObject("result");
                 String status = result.getString("status");
 
-                Log.Debug("Freebox Connector - WaitForUserGrant", output.toString() + status);
+                Log.Debug("Freebox Connector - WaitForUserGrant", output.toString());
 
                 if (success == true) {
                     // Timeout = reconnect
-                    if (status.equals("timeout")) {
+                    if (status.equals("timeout") || status.equals("unknown")) {
                         Config.ClearConfigFile();
                         SwingUtilities.invokeLater(new Runnable() {
                             @Override
@@ -97,6 +101,7 @@ public class FreeboxConnector {
                                 }
                             });
                         }
+                        RetrieveChallenge();
                     }
                     // Else, wait
                     else {
@@ -160,6 +165,34 @@ public class FreeboxConnector {
             @Override
             public void onError(IOException ex) {
                 Log.Debug("Freebox Connector - TokenRequest", ex.getMessage());
+            }
+        });
+    }
+
+    public static void RetrieveChallenge() {
+        final ByteArrayOutputStream output = new ByteArrayOutputStream();
+        HttpUtils.DownloadGetTask task = HttpUtils.downloadGetAsync(Config.FREEBOX_API_CHECK_URL, output, "Getting Challenge");
+
+        task.addListener(new HttpUtils.DownloadListener() {
+            @Override public void onComplete() {
+                JSONObject obj = new JSONObject(output.toString());
+                boolean success = obj.getBoolean("success");
+                JSONObject result = obj.getJSONObject("result");
+                String challenge = result.getString("challenge");
+
+                Properties properties = Config.ReadProperties();
+
+                if (success == true) {
+                    Log.Debug("Freebox Connector - RetrieveChallenge", output.toString());
+
+                    String password = Crypto.HmacSha1(properties.getProperty("app_token"), challenge);
+                }
+            }
+        });
+
+        task.addListener(new HttpUtils.DownloadListener() {
+            @Override
+            public void onError(IOException ex) {
             }
         });
     }
