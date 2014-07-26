@@ -41,7 +41,7 @@ public class Checker {
 
                 if (success == true) {
                     Log.Debug("Freebox Checker", "Freebox is UP (logged_in : " + loggedIn + ")");
-                    FreeboxConnector.TokenRequest();
+                    //FreeboxConnector.TokenRequest();
                 }
             }
         });
