@@ -12,7 +12,7 @@ import java.io.IOException;
 public class Checker {
     public static void CheckVersion() {
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
-        HttpUtils.DownloadGetTask task = HttpUtils.downloadGetAsync(Config.VERSION_DISTANT_FILE, output, "Checking version");
+        HttpUtils.DownloadGetTask task = HttpUtils.downloadGetAsync(Config.VERSION_DISTANT_FILE, output, "Checking version", true);
 
         task.addListener(new HttpUtils.DownloadListener() {
             @Override public void onComplete() {
@@ -29,7 +29,7 @@ public class Checker {
 
     public static void CheckFreeboxUp(final JFrame frame) {
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
-        HttpUtils.DownloadGetTask task = HttpUtils.downloadGetAsync(Config.FREEBOX_API_CHECK_URL, output, "Checking freebox");
+        HttpUtils.DownloadGetTask task = HttpUtils.downloadGetAsync(Config.FREEBOX_API_CHECK_URL, output, "Checking freebox", true);
 
         task.addListener(new HttpUtils.DownloadListener() {
             @Override public void onComplete() {

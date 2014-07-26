@@ -40,7 +40,9 @@ public class TaskPanel extends JPanel {
 		HttpUtils.addListener(new HttpUtils.Listener() {
             @Override
             public void newDownload(HttpUtils.DownloadTask task) {
-                addDownloadTile(task);
+                if (task.hasTaskPanelTile()) {
+                    addDownloadTile(task);
+                }
             }
         });
 	}

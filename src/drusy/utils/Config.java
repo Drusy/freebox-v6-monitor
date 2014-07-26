@@ -22,6 +22,7 @@ public class Config {
     // Freebox urls
     public static String FREEBOX_API_VERSION_URL = "http://mafreebox.freebox.fr/api_version";
     public static String FREEBOX_API_CHECK_URL = "http://mafreebox.freebox.fr/api/v3/login";
+    public static String FREEBOX_API_SESSION_TOKEN = "http://mafreebox.freebox.fr/api/v3/login/session";
     public static String FREEBOX_API_CONNECTION = "http://mafreebox.freebox.fr/api/v3/connection";
     public static String FREEBOX_API_AUTHORIZE = "http://mafreebox.freebox.fr/api/v3/login/authorize";
     public static String FREEBOX_URL = "http://mafreebox.freebox.fr";

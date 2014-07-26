@@ -13,7 +13,7 @@ import java.net.UnknownHostException;
 import java.util.Properties;
 
 public class FreeboxConnector {
-    private static String SessionToken = "";
+    public static String SessionToken = "";
 
     public static void Connect(JFrame frame) {
         Properties properties = Config.ReadProperties();
@@ -27,7 +27,7 @@ public class FreeboxConnector {
 
     public static void TrackAuthorizationProgress(final int track_id, final JFrame frame) {
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
-        HttpUtils.DownloadTask task = HttpUtils.downloadGetAsync(Config.FREEBOX_API_AUTHORIZE + "/" + String.valueOf(track_id), output, "Track authorization progress");
+        HttpUtils.DownloadTask task = HttpUtils.downloadGetAsync(Config.FREEBOX_API_AUTHORIZE + "/" + String.valueOf(track_id), output, "Track authorization progress", true);
 
         task.addListener(new HttpUtils.DownloadListener() {
             @Override public void onComplete() {
@@ -68,7 +68,7 @@ public class FreeboxConnector {
 
     public static void WaitForUserGrant(final int track_id, final JDialog dialog, final JFrame frame) {
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
-        HttpUtils.DownloadTask task = HttpUtils.downloadGetAsync(Config.FREEBOX_API_AUTHORIZE + "/" + String.valueOf(track_id), output, "Track authorization progress");
+        HttpUtils.DownloadTask task = HttpUtils.downloadGetAsync(Config.FREEBOX_API_AUTHORIZE + "/" + String.valueOf(track_id), output, "Track authorization progress", true);
 
         task.addListener(new HttpUtils.DownloadListener() {
             @Override public void onComplete() {
@@ -171,7 +171,7 @@ public class FreeboxConnector {
 
     public static void RetrieveChallenge() {
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
-        HttpUtils.DownloadGetTask task = HttpUtils.downloadGetAsync(Config.FREEBOX_API_CHECK_URL, output, "Getting Challenge");
+        HttpUtils.DownloadGetTask task = HttpUtils.downloadGetAsync(Config.FREEBOX_API_CHECK_URL, output, "Getting Challenge", true);
 
         task.addListener(new HttpUtils.DownloadListener() {
             @Override public void onComplete() {
@@ -186,6 +186,7 @@ public class FreeboxConnector {
                     Log.Debug("Freebox Connector - RetrieveChallenge", output.toString());
 
                     String password = Crypto.HmacSha1(properties.getProperty("app_token"), challenge);
+                    RetrieveSessionToken(password);
                 }
             }
         });
@@ -193,6 +194,39 @@ public class FreeboxConnector {
         task.addListener(new HttpUtils.DownloadListener() {
             @Override
             public void onError(IOException ex) {
+            }
+        });
+    }
+
+    public static void RetrieveSessionToken(String password) {
+        final ByteArrayOutputStream output = new ByteArrayOutputStream();
+        JSONObject authorize = new JSONObject();
+
+        authorize.put("app_id", Config.APP_ID);
+        authorize.put("password", password);
+
+        HttpUtils.DownloadPostTask task = HttpUtils.downloadPostAsync(Config.FREEBOX_API_SESSION_TOKEN, output, "Request authorization", authorize);
+
+        task.addListener(new HttpUtils.DownloadListener() {
+            @Override public void onComplete() {
+                JSONObject obj = new JSONObject(output.toString());
+                boolean success = obj.getBoolean("success");
+                JSONObject result = obj.getJSONObject("result");
+
+                Log.Debug("Freebox Connector - RetrieveSessionToken", output.toString());
+
+                if (success == true)  {
+                    SessionToken = result.getString("session_token");
+                } else {
+                    Log.Debug("Freebox Connector - RetrieveSessionToken", "Bad Password");
+                }
+            }
+        });
+
+        task.addListener(new HttpUtils.DownloadListener() {
+            @Override
+            public void onError(IOException ex) {
+                Log.Debug("Freebox Connector - RetrieveSessionToken", ex.getMessage());
             }
         });
     }

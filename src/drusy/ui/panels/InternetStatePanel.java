@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import java.awt.*;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.TimerTask;
 import javax.swing.*;
 
 /**
@@ -21,6 +22,7 @@ import javax.swing.*;
  */
 public class InternetStatePanel extends JPanel {
     private MainPanel parentPanel;
+    private java.util.Timer timer;
 
     public InternetStatePanel(final MainPanel parentPanel) {
         initComponents();
@@ -30,9 +32,22 @@ public class InternetStatePanel extends JPanel {
         Style.registerCssClasses(headerPanel, ".header");
     }
 
+    public void updatePeriodically() {
+        long delay = 1000 * 2;
+
+        timer = new java.util.Timer();
+
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                update();
+            }
+        }, 0, delay);
+    }
+
     public void update() {
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
-        HttpUtils.DownloadGetTask task = HttpUtils.downloadGetAsync(Config.FREEBOX_API_CONNECTION, output, "Fetching connection state");
+        HttpUtils.DownloadGetTask task = HttpUtils.downloadGetAsync(Config.FREEBOX_API_CONNECTION, output, "Fetching connection state", false);
 
         task.addListener(new HttpUtils.DownloadListener() {
             @Override public void onComplete() {
@@ -47,8 +62,8 @@ public class InternetStatePanel extends JPanel {
                     String ipv4 = result.getString("ipv4");
 
                     ipContentLabel.setText(ipv4);
-                    downloadContentLabel.setText(String.valueOf(rateDown));
-                    uploadContentLabel.setText(String.valueOf(rateUp));
+                    downloadContentLabel.setText(String.valueOf(rateDown / 1000.0) + " ko/s");
+                    uploadContentLabel.setText(String.valueOf(rateUp / 1000.0) + " ko/s");
                 } else {
                     String msg = obj.getString("msg");
                     Log.Debug("Freebox Connection State", msg);

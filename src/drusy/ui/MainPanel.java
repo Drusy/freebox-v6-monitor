@@ -198,7 +198,7 @@ public class MainPanel extends PaintedPanel {
 	}
 
 	public void showMonitorView() {
-        internetStatePanel.update();
+        internetStatePanel.updatePeriodically();
 
         rootPanel.createTransition()
 			.push(new SLKeyframe(monitorCfg, transitionDuration)

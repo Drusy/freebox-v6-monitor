@@ -1,5 +1,6 @@
 package aurelienribon.utils;
 
+import drusy.utils.FreeboxConnector;
 import org.json.JSONObject;
 
 import java.io.*;
@@ -26,7 +27,7 @@ public class HttpUtils {
 	 * loss). The listeners also let you be notified of the download progress.
 	 */
 	public static DownloadGetTask downloadAsync(String url, OutputStream output) {
-		return downloadGetAsync(url, output, null);
+		return downloadGetAsync(url, output, null, true);
 	}
 
 	/**
@@ -42,7 +43,7 @@ public class HttpUtils {
 	 * You can also assign a custom tag to the download, to pass information
 	 * to the listeners for instance.
 	 */
-	public static DownloadGetTask downloadGetAsync(String url, OutputStream output, String tag) {
+	public static DownloadGetTask downloadGetAsync(String url, OutputStream output, String tag, boolean taskPanelTile) {
 		URL input;
 
 		try {
@@ -51,8 +52,10 @@ public class HttpUtils {
 			return null;
 		}
 
-		final DownloadGetTask task = new DownloadGetTask(input, output, tag);
-		for (Listener lst : listeners) lst.newDownload(task);
+		final DownloadGetTask task = new DownloadGetTask(input, output, tag, taskPanelTile);
+		for (Listener lst : listeners)  {
+            lst.newDownload(task);
+        }
 
 		task.start();
 		return task;
@@ -115,6 +118,7 @@ public class HttpUtils {
         public String getTag();
         public void stop();
         public void addListener(DownloadListener listener);
+        public boolean hasTaskPanelTile();
     }
 
 	/**
@@ -127,12 +131,18 @@ public class HttpUtils {
 		private final String tag;
 		private final List<DownloadListener> listeners = new CopyOnWriteArrayList<DownloadListener>();
 		private boolean run = true;
+        private boolean taskPanelTile;
 
-		public DownloadGetTask(URL input, OutputStream output, String tag) {
+		public DownloadGetTask(URL input, OutputStream output, String tag, boolean taskPanelTile) {
 			this.input = input;
 			this.output = output;
 			this.tag = tag;
+            this.taskPanelTile = taskPanelTile;
 		}
+
+        public boolean hasTaskPanelTile() {
+            return taskPanelTile;
+        }
 
 		/**
 		 * Adds a new listener to listen for the task events.
@@ -166,6 +176,7 @@ public class HttpUtils {
 					connection.setDoInput(true);
 					connection.setDoOutput(false);
 					connection.setUseCaches(true);
+                    connection.setRequestProperty("X-Fbx-App-Auth", FreeboxConnector.SessionToken);
 					connection.setConnectTimeout(5000);
 					connection.connect();
 
@@ -225,6 +236,11 @@ public class HttpUtils {
          */
         public void addListener(DownloadListener listener) {
             listeners.add(listener);
+        }
+
+        @Override
+        public boolean hasTaskPanelTile() {
+            return true;
         }
 
         /**

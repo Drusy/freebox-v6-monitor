@@ -95,7 +95,7 @@ public class VersionLabel extends JLabel {
 		};
 
 		Timer timer = new Timer(2000, new ActionListener() {@Override public void actionPerformed(ActionEvent e) {
-			HttpUtils.downloadGetAsync(checkUrl, stream, "Version number").addListener(listener);
+			HttpUtils.downloadGetAsync(checkUrl, stream, "Version number", true).addListener(listener);
 		}});
 		timer.setRepeats(false);
 		timer.start();
