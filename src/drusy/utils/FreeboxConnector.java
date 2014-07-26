@@ -24,16 +24,33 @@ public class FreeboxConnector {
         }
     }
 
-    public static void TrackAuthorizationProgress(int track_id, final JFrame frame) {
+    public static void TrackAuthorizationProgress(final int track_id, final JFrame frame) {
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
         HttpUtils.DownloadTask task = HttpUtils.downloadGetAsync(Config.FREEBOX_API_AUTHORIZE + "/" + String.valueOf(track_id), output, "Track authorization progress");
 
         task.addListener(new HttpUtils.DownloadListener() {
             @Override public void onComplete() {
+                JSONObject obj = new JSONObject(output.toString());
+                boolean success = obj.getBoolean("success");
+                JSONObject result = obj.getJSONObject("result");
+                String status = result.getString("status");
+
                 Log.Debug("Freebox Connector - TrackAuthorizationProgress", output.toString());
 
-                WaitingGrantDialog dialog = new WaitingGrantDialog(frame);
-                DialogUtils.fadeIn(dialog);
+                if (success == true) {
+                    if (status.equals("timeout")) {
+                        Config.ClearConfigFile();
+                    } else if (!status.equals("granted")) {
+                        final WaitingGrantDialog dialog = new WaitingGrantDialog(frame);;
+                        SwingUtilities.invokeLater(new Runnable() {
+                            public void run() {
+                                DialogUtils.fadeIn(dialog);
+                            }
+                        });
+
+                        WaitForUserGrant(track_id, dialog, frame);
+                    }
+                }
             }
         });
 
@@ -44,6 +61,64 @@ public class FreeboxConnector {
             }
         });
     }
+
+    public static void WaitForUserGrant(final int track_id, final JDialog dialog, final JFrame frame) {
+        final ByteArrayOutputStream output = new ByteArrayOutputStream();
+        HttpUtils.DownloadTask task = HttpUtils.downloadGetAsync(Config.FREEBOX_API_AUTHORIZE + "/" + String.valueOf(track_id), output, "Track authorization progress");
+
+        task.addListener(new HttpUtils.DownloadListener() {
+            @Override public void onComplete() {
+                JSONObject obj = new JSONObject(output.toString());
+                boolean success = obj.getBoolean("success");
+                JSONObject result = obj.getJSONObject("result");
+                String status = result.getString("status");
+
+                Log.Debug("Freebox Connector - WaitForUserGrant", output.toString() + status);
+
+                if (success == true) {
+                    // Timeout = reconnect
+                    if (status.equals("timeout")) {
+                        Config.ClearConfigFile();
+                        SwingUtilities.invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                DialogUtils.fadeOut(dialog);
+                            }
+                        });
+                        Connect(frame);
+                    }
+                    // Granted = ok
+                    else if  (status.equals("granted")) {
+                        if (dialog.isShowing()) {
+                            SwingUtilities.invokeLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    DialogUtils.fadeOut(dialog);
+                                }
+                            });
+                        }
+                    }
+                    // Else, wait
+                    else {
+                        try {
+                            Thread.sleep(2000);
+                            WaitForUserGrant(track_id, dialog, frame);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        });
+
+        task.addListener(new HttpUtils.DownloadListener() {
+            @Override
+            public void onError(IOException ex) {
+                Log.Debug("Freebox Connector - WaitForUserGrant", ex.getMessage());
+            }
+        });
+    }
+
 
     public static void TokenRequest(final JFrame frame) {
         final ByteArrayOutputStream output = new ByteArrayOutputStream();

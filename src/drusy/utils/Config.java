@@ -40,6 +40,14 @@ public class Config {
         }
     }
 
+    public static void ClearConfigFile() {
+        String homePath = System.getProperty("user.home");
+        File configFile = new File(homePath + "/" + CONFIG_FOLDER + "/" + "config.properties");
+
+        configFile.delete();
+        CreateConfigFile();
+    }
+
     public static void WriteProperties(Properties properties) {
         String homePath = System.getProperty("user.home");
         File configFile = new File(homePath + "/" + CONFIG_FOLDER + "/" + "config.properties");

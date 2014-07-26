@@ -32,12 +32,19 @@ public class WaitingGrantDialog extends JDialog {
         label2.setFont(new Font(label.getFont().getFontName(), Font.PLAIN, 20));
         label2.setAlignmentX(CENTER_ALIGNMENT);
 
+        JLabel label3 = new JLabel("Waiting for user ...");
+        label3.setForeground(Color.WHITE);
+        label3.setFont(new Font(label.getFont().getFontName(), Font.PLAIN, 20));
+        label3.setAlignmentX(CENTER_ALIGNMENT);
+
         BackgroundPanel panel = new BackgroundPanel(null, Res.getImage("img/bg.png").getImage());
         BoxLayout layout = new BoxLayout(panel, BoxLayout.Y_AXIS);
         panel.setLayout(layout);
         panel.add(Box.createVerticalGlue());
         panel.add(label);
         panel.add(label2);
+        panel.add(Box.createVerticalGlue());
+        panel.add(label3);
         panel.add(Box.createVerticalGlue());
         panel.setPreferredSize(new Dimension(400, 300));
 
