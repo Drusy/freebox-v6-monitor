@@ -2,7 +2,7 @@ package drusy.utils;
 
 import aurelienribon.utils.DialogUtils;
 import aurelienribon.utils.HttpUtils;
-import drusy.ui.ErrorDialog;
+import drusy.ui.dialogs.ErrorDialog;
 import org.json.JSONObject;
 
 import javax.swing.*;
@@ -41,7 +41,8 @@ public class Checker {
 
                 if (success == true) {
                     Log.Debug("Freebox Checker", "Freebox is UP (logged_in : " + loggedIn + ")");
-                    //FreeboxConnector.TokenRequest();
+
+                    FreeboxConnector.Connect(frame);
                 }
             }
         });

@@ -2,9 +2,6 @@ package drusy;
 
 import aurelienribon.ui.components.ArStyle;
 import aurelienribon.ui.css.swing.SwingStyle;
-import aurelienribon.utils.DialogUtils;
-import aurelienribon.utils.SwingUtils;
-import drusy.ui.ErrorDialog;
 import drusy.ui.MainPanel;
 import drusy.utils.Config;
 

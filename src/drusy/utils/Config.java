@@ -67,16 +67,17 @@ public class Config {
         File configFile = new File(homePath + "/" + CONFIG_FOLDER + "/" + "config.properties");
         InputStream input = null;
 
+        CreateConfigFile();
+
         try {
             input = new FileInputStream(configFile);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
 
-        CreateConfigFile();
-
         try {
             properties.load(input);
+            input.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -1,36 +1,52 @@
 package drusy.utils;
 
+import aurelienribon.utils.DialogUtils;
 import aurelienribon.utils.HttpUtils;
+import drusy.ui.dialogs.WaitingGrantDialog;
 import org.json.JSONObject;
 
+import javax.swing.*;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Properties;
 
 public class FreeboxConnector {
 
-    public static void TrackAuthorizationProgress(String app_token, int track_id) {
+    public static void Connect(JFrame frame) {
+        Properties properties = Config.ReadProperties();
+
+        if (properties.getProperty("app_token") == null || properties.getProperty("track_id") == null) {
+            FreeboxConnector.TokenRequest(frame);
+        } else {
+            TrackAuthorizationProgress(Integer.parseInt(properties.getProperty("track_id")), frame);
+        }
+    }
+
+    public static void TrackAuthorizationProgress(int track_id, final JFrame frame) {
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
         HttpUtils.DownloadTask task = HttpUtils.downloadGetAsync(Config.FREEBOX_API_AUTHORIZE + "/" + String.valueOf(track_id), output, "Track authorization progress");
 
         task.addListener(new HttpUtils.DownloadListener() {
             @Override public void onComplete() {
-                System.out.println(output.toString());
+                Log.Debug("Freebox Connector - TrackAuthorizationProgress", output.toString());
+
+                WaitingGrantDialog dialog = new WaitingGrantDialog(frame);
+                DialogUtils.fadeIn(dialog);
             }
         });
 
         task.addListener(new HttpUtils.DownloadListener() {
             @Override
             public void onError(IOException ex) {
-
+                Log.Debug("Freebox Connector - TrackAuthorizationProgress", ex.getMessage());
             }
         });
     }
 
-    public static void TokenRequest() {
+    public static void TokenRequest(final JFrame frame) {
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
-
         JSONObject authorize = new JSONObject();
 
         authorize.put("app_id", Config.APP_ID);
@@ -46,17 +62,21 @@ public class FreeboxConnector {
 
         task.addListener(new HttpUtils.DownloadListener() {
             @Override public void onComplete() {
-                String json = output.toString();
-                JSONObject obj = new JSONObject(json);
+                JSONObject obj = new JSONObject(output.toString());
                 boolean success = obj.getBoolean("success");
                 JSONObject result = obj.getJSONObject("result");
                 String app_token = result.getString("app_token");
                 int track_id = result.getInt("track_id");
 
-                System.out.println(json);
+                Properties properties = new Properties();
+                properties.setProperty("app_token", app_token);
+                properties.setProperty("track_id", String.valueOf(track_id));
+                Config.WriteProperties(properties);
+
+                Log.Debug("Freebox Connector - TokenRequest", output.toString());
 
                 if (success == true)  {
-                    TrackAuthorizationProgress(app_token, track_id);
+                    TrackAuthorizationProgress(track_id, frame);
                 }
             }
         });
