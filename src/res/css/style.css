@@ -77,6 +77,7 @@ aurelienribon-ui-CompactCheckBox:disabled {
 }
 
 #internetStatePanel {-ar-border-title: "Internet State";}
+#wifiStatePanel {-ar-border-title: "Wi-Fi State";}
 #configUpdatePanel {-ar-border-title: "Project Selection";}
 #librarySelectionPanel {-ar-border-title: "Library Selection";}
 #previewPanel {-ar-border-title: "Overview";}

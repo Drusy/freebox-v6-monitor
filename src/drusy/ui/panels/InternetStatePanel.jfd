@@ -19,21 +19,65 @@ new FormModel {
 				"value": "North"
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-				"$horizontalGroup": "par l {seq {space :::p, par t {comp uploadTitleLabel:::::p, comp downloadTitleLabel:::p::p, comp ipTitleLabel:::::p}, space :p:10:p, par l {comp ipContentLabel::l::452:x, comp uploadContentLabel::l::452:x, comp downloadContentLabel::l::452:x}, space :::p}}"
-				"$verticalGroup": "par l {seq l {space :p:20:p, par b {comp ipTitleLabel::b:p:22:p, comp ipContentLabel::b:p::p}, space :::p, par b {comp uploadTitleLabel::b:p:22:p, comp uploadContentLabel::b:p::p}, space :::p, par b {comp downloadTitleLabel::b:p:22:p, comp downloadContentLabel::b:p::p}, space :::p}}"
+				"$horizontalGroup": "par l {seq {space :::p, par t {comp connectionStateTitleLabel:::::p, comp downloadTitleLabel:::p::p, comp ipv4TitleLabel:::::p, comp maxUploadTitleLabel:::::p, comp maxDownloadTitleLabel:::p::p, comp uploadTitleLabel:::::p, comp ipv6TitleLabel:::::p}, space :p:10:p, par l {comp ipv4ContentLabel::l::244:x, comp connectionStateContentLabel::l::244:x, comp downloadContentLabel::l::244:x, comp maxUploadContentLabel::l::244:x, comp maxDownloadContentLabel::l::244:x, comp uploadContentLabel::l::244:x, comp ipv6ContentLabel::l::244:x}, space :::p}}"
+				"$verticalGroup": "par l {seq l {space :p:20:p, par b {comp ipv4TitleLabel::b:p:22:p, comp ipv4ContentLabel::b:p::p}, space :::p, par b {comp ipv6TitleLabel::b:p:22:p, comp ipv6ContentLabel::b:p::p}, space :::p, par b {comp connectionStateTitleLabel::b:p:22:p, comp connectionStateContentLabel::b:p::p}, space :::p, par b {comp uploadTitleLabel::b:p:22:p, comp uploadContentLabel::b:p::p}, space :::p, par b {comp maxUploadTitleLabel::b:p:22:p, comp maxUploadContentLabel::b:p::p}, space :::p, par b {comp downloadTitleLabel::b:p:22:p, comp downloadContentLabel::b:p::p}, space :::p, par b {comp maxDownloadTitleLabel::b:p:22:p, comp maxDownloadContentLabel::b:p::p}, space :::p}}"
 			} ) {
 				name: "mainPanel"
 				"opaque": false
 				"minimumSize": new java.awt.Dimension( 100, 100 )
 				add( new FormComponent( "javax.swing.JLabel" ) {
-					name: "ipTitleLabel"
+					name: "ipv4TitleLabel"
 					"text": "IP v4 :"
 					"horizontalAlignment": 4
 				} )
 				add( new FormComponent( "javax.swing.JTextField" ) {
-					name: "ipContentLabel"
+					name: "ipv4ContentLabel"
 					"editable": false
 					"text": "192.168.0.1"
+					"horizontalAlignment": 0
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "connectionStateTitleLabel"
+					"text": "Connection State :"
+					"horizontalAlignment": 4
+				} )
+				add( new FormComponent( "javax.swing.JTextField" ) {
+					name: "connectionStateContentLabel"
+					"editable": false
+					"text": "up"
+					"horizontalAlignment": 0
+				} )
+				add( new FormComponent( "javax.swing.JTextField" ) {
+					name: "downloadContentLabel"
+					"editable": false
+					"text": "- ko/s"
+					"horizontalAlignment": 0
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "downloadTitleLabel"
+					"text": "Download Bandwidth :"
+					"horizontalAlignment": 4
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "maxUploadTitleLabel"
+					"text": "Max Upload Bandwidth :"
+					"horizontalAlignment": 4
+				} )
+				add( new FormComponent( "javax.swing.JTextField" ) {
+					name: "maxUploadContentLabel"
+					"editable": false
+					"text": "- ko/s"
+					"horizontalAlignment": 0
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "maxDownloadTitleLabel"
+					"text": "Max Download Bandwidth :"
+					"horizontalAlignment": 4
+				} )
+				add( new FormComponent( "javax.swing.JTextField" ) {
+					name: "maxDownloadContentLabel"
+					"editable": false
+					"text": "- ko/s"
 					"horizontalAlignment": 0
 				} )
 				add( new FormComponent( "javax.swing.JLabel" ) {
@@ -44,18 +88,18 @@ new FormModel {
 				add( new FormComponent( "javax.swing.JTextField" ) {
 					name: "uploadContentLabel"
 					"editable": false
-					"text": "250 ko/s"
+					"text": "- ko/s"
 					"horizontalAlignment": 0
 				} )
 				add( new FormComponent( "javax.swing.JTextField" ) {
-					name: "downloadContentLabel"
+					name: "ipv6ContentLabel"
 					"editable": false
-					"text": "1.2 mo/s"
+					"text": "::1:"
 					"horizontalAlignment": 0
 				} )
 				add( new FormComponent( "javax.swing.JLabel" ) {
-					name: "downloadTitleLabel"
-					"text": "Download Bandwidth :"
+					name: "ipv6TitleLabel"
+					"text": "IP v6 :"
 					"horizontalAlignment": 4
 				} )
 			}, new FormLayoutConstraints( class java.lang.String ) {
@@ -63,7 +107,7 @@ new FormModel {
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 390, 285 )
+			"size": new java.awt.Dimension( 400, 280 )
 		} )
 	}
 }

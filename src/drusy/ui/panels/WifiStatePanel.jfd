@@ -1,0 +1,25 @@
+JFDML JFormDesigner: "5.2.0.0.109" Java: "1.7.0_40" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+			name: "this"
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+				name: "headPanel"
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label1"
+					"text": "This panel shows you the Wi-Fi state"
+					"horizontalAlignment": 0
+				}, new FormLayoutConstraints( class java.lang.String ) {
+					"value": "Center"
+				} )
+			}, new FormLayoutConstraints( class java.lang.String ) {
+				"value": "North"
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 400, 85 )
+		} )
+	}
+}

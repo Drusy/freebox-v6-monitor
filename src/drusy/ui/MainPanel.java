@@ -12,6 +12,7 @@ import aurelienribon.utils.Res;
 import aurelienribon.utils.SwingUtils;
 import aurelienribon.utils.VersionLabel;
 import drusy.ui.panels.InternetStatePanel;
+import drusy.ui.panels.WifiStatePanel;
 import drusy.utils.Checker;
 import drusy.utils.Config;
 
@@ -26,6 +27,7 @@ public class MainPanel extends PaintedPanel {
     private final TaskPanel taskPanel = new TaskPanel();
     private JFrame parentFrame;
     private InternetStatePanel internetStatePanel = new InternetStatePanel(this);
+    private WifiStatePanel wifiStatePanel = new WifiStatePanel();
 
 	// Start panel components
 	private final JLabel startLogoLabel = new JLabel(Res.getImage("img/freebox-v6-monitor-logo.png"));
@@ -116,6 +118,7 @@ public class MainPanel extends PaintedPanel {
 	private void initStyle() {
 		Style.registerCssClasses(this, ".rootPanel");
         Style.registerCssClasses(internetStatePanel, ".groupPanel", "#internetStatePanel");
+        Style.registerCssClasses(wifiStatePanel, ".groupPanel", "#wifiStatePanel");
 		Style.registerCssClasses(startMonitorBtn, ".startButton");
 		Style.registerCssClasses(startWebviewBtn, ".startButton");
 		Style.registerCssClasses(changeModeBtn, ".bold", ".center");
@@ -123,7 +126,8 @@ public class MainPanel extends PaintedPanel {
         Style.registerCssClasses(updateLabel, ".versionLabel");
 
 		Component[] targets = new Component[] {
-			this, taskPanel, changeModeBtn, startMonitorBtn, startWebviewBtn, versionLabel, updateLabel, internetStatePanel
+			this, taskPanel, changeModeBtn, startMonitorBtn, startWebviewBtn, versionLabel, updateLabel,
+                internetStatePanel, wifiStatePanel
 		};
 
 		Style style = new Style(Res.getUrl("css/style.css"));
@@ -173,8 +177,9 @@ public class MainPanel extends PaintedPanel {
                     .place(2, 0, updateLabel)
                 .endGrid()
                 .beginGrid(0, 1)
-                    .row(1f)
+                    .row(wifiStatePanel.getPreferredSize().height)
                     .col(1f)
+                    .place(0, 0, wifiStatePanel)
                 .endGrid()
                 .beginGrid(0, 2)
                     .row(1f)
