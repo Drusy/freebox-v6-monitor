@@ -25,6 +25,8 @@ public class Config {
     public static String FREEBOX_API_SESSION_TOKEN = "http://mafreebox.freebox.fr/api/v3/login/session";
     public static String FREEBOX_API_CONNECTION = "http://mafreebox.freebox.fr/api/v3/connection";
     public static String FREEBOX_API_AUTHORIZE = "http://mafreebox.freebox.fr/api/v3/login/authorize";
+    public static String FREEBOX_API_WIFI_ID = "http://mafreebox.freebox.fr/api/v2/wifi/ap";
+    public static String FREEBOX_API_WIFI_STATIONS = "http://mafreebox.freebox.fr/api/v2/wifi/ap/{id}/stations";
     public static String FREEBOX_URL = "http://mafreebox.freebox.fr";
 
     private static void CreateConfigFile() {

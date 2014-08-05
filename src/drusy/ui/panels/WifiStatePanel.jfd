@@ -6,7 +6,7 @@ new FormModel {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
 			name: "this"
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
-				name: "headPanel"
+				name: "headerPanel"
 				add( new FormComponent( "javax.swing.JLabel" ) {
 					name: "label1"
 					"text": "This panel shows you the Wi-Fi state"
@@ -17,9 +17,16 @@ new FormModel {
 			}, new FormLayoutConstraints( class java.lang.String ) {
 				"value": "North"
 			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class javax.swing.BoxLayout ) {
+				"axis": 1
+			} ) {
+				name: "mainPanel"
+			}, new FormLayoutConstraints( class java.lang.String ) {
+				"value": "Center"
+			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 400, 85 )
+			"size": new java.awt.Dimension( 485, 205 )
 		} )
 	}
 }
