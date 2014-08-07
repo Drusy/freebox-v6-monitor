@@ -1,10 +1,9 @@
 /*
- * Created by JFormDesigner on Mon Aug 04 21:13:44 CEST 2014
+ * Created by JFormDesigner on Thu Aug 07 20:43:23 CEST 2014
  */
 
 package drusy.ui.panels;
 
-import javax.swing.border.*;
 import aurelienribon.ui.css.Style;
 import aurelienribon.utils.HttpUtils;
 import aurelienribon.utils.Res;
@@ -14,29 +13,31 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.TimerTask;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
 /**
  * @author Kevin Renella
  */
-public class WifiStatePanel extends JPanel {
+public class SwitchStatePanel extends JPanel {
     private java.util.List<JPanel> users = new ArrayList<JPanel>();
     private java.util.Timer timer;
+    private WifiStatePanel wifiStatePanel;
+    private int gap;
 
-    public WifiStatePanel() {
+    public SwitchStatePanel(WifiStatePanel wifiStatePanel, int gap) {
         initComponents();
 
-        Style.registerCssClasses(headerPanel, ".header");
-    }
+        setVisible(false);
 
-    Component[] getUsersComponents() {
-        return mainPanel.getComponents();
+        this.wifiStatePanel = wifiStatePanel;
+        this.gap = gap;
+
+        Style.registerCssClasses(headerPanel, ".header");
     }
 
     public void updatePeriodically() {
@@ -49,13 +50,14 @@ public class WifiStatePanel extends JPanel {
             public void run() {
                 update();
             }
-        }, 0, delay);
+        }, 500, delay);
     }
 
     public void update() {
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
-        HttpUtils.DownloadGetTask task = HttpUtils.downloadGetAsync(Config.FREEBOX_API_WIFI_ID, output, "Getting WiFi id", false);
+        HttpUtils.DownloadGetTask task = HttpUtils.downloadGetAsync(Config.FREEBOX_API_SWITCH_STATUS, output, "Getting Switch status", false);
 
+        System.out.println("update");
         task.addListener(new HttpUtils.DownloadListener() {
             @Override public void onComplete() {
                 String json = output.toString();
@@ -63,15 +65,25 @@ public class WifiStatePanel extends JPanel {
                 boolean success = obj.getBoolean("success");
 
                 if (success == true) {
-                    JSONArray result = obj.getJSONArray("result");
-                    JSONObject wifi = result.getJSONObject(0);
-                    int id = wifi.getInt("id");
+                    JSONArray switchStatusArray = obj.getJSONArray("result");
 
-                    addUsersForWifiId(id);
+                    for (int i = 0; i < switchStatusArray.length(); ++i) {
+                        JSONObject switchStatus = switchStatusArray.getJSONObject(i);
+                        String status = switchStatus.getString("link");
+                        int id = switchStatus.getInt("id");
+
+                        if (status.equals("up")) {
+                            JSONArray switchMacArray = switchStatus.getJSONArray("mac_list");
+                            JSONObject switchMac = switchMacArray.getJSONObject(i);
+                            String hostname = switchMac.getString("hostname");
+                            addUsersForSwitchIdAndHostname(id, hostname);
+                        }
+                    }
+
 
                 } else {
                     String msg = obj.getString("msg");
-                    Log.Debug("Freebox Wi-Fi State (get id)", msg);
+                    Log.Debug("Freebox Switch status", msg);
                 }
             }
         });
@@ -79,15 +91,15 @@ public class WifiStatePanel extends JPanel {
         task.addListener(new HttpUtils.DownloadListener() {
             @Override
             public void onError(IOException ex) {
-                Log.Debug("Freebox Wi-Fi State (get id)", ex.getMessage());
+                Log.Debug("Freebox Switch status", ex.getMessage());
             }
         });
     }
 
-    public void addUsersForWifiId(int id) {
+    public void addUsersForSwitchIdAndHostname(int id, final String hostname) {
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
-        String statement = Config.FREEBOX_API_WIFI_STATIONS.replace("{id}", String.valueOf(id));
-        HttpUtils.DownloadGetTask task = HttpUtils.downloadGetAsync(statement, output, "Getting WiFi id", false);
+        String statement = Config.FREEBOX_API_SWITCH_ID.replace("{id}", String.valueOf(id));
+        HttpUtils.DownloadGetTask task = HttpUtils.downloadGetAsync(statement, output, "Getting Switch information", false);
 
         task.addListener(new HttpUtils.DownloadListener() {
             @Override public void onComplete() {
@@ -97,29 +109,24 @@ public class WifiStatePanel extends JPanel {
 
                 clearUsers();
                 if (success == true) {
-                    final JSONArray usersList = obj.getJSONArray("result");
+                    JSONObject result = obj.getJSONObject("result");
+                    long txBytes = result.getLong("tx_bytes_rate");
+                    long rxBytes = result.getLong("rx_bytes_rate");
 
-                    for (int i = 0; i < usersList.length(); ++i) {
-                        JSONObject user = usersList.getJSONObject(i);
-                        final String hostname = user.getString("hostname");
-                        final long txBytes = user.getLong("tx_rate");
-                        final long rxBytes = user.getLong("rx_rate");
-                        JSONObject host = user.getJSONObject("host");
-                        final String host_type = host.getString("host_type");
-
-                        addUser(host_type, hostname, txBytes, rxBytes);
-                    }
+                    addUser("", hostname, txBytes, rxBytes);
                 } else {
                     String msg = obj.getString("msg");
-                    Log.Debug("Freebox Wi-Fi State (get users)", msg);
+                    Log.Debug("Freebox Switch information", msg);
                 }
+
+                setVisible(true);
             }
         });
 
         task.addListener(new HttpUtils.DownloadListener() {
             @Override
             public void onError(IOException ex) {
-                Log.Debug("Freebox Wi-Fi State (get users)", ex.getMessage());
+                Log.Debug("Freebox Switch information", ex.getMessage());
             }
         });
     }
@@ -152,8 +159,8 @@ public class WifiStatePanel extends JPanel {
     }
 
     private void adaptPanelSize() {
-        mainPanel.setSize(mainPanel.getWidth(), (int)mainPanel.getPreferredSize().getHeight());
-        setSize(getWidth(), (int)getPreferredSize().getHeight());
+        setSize(getWidth(), (int) getPreferredSize().getHeight());
+        setLocation(getX(), wifiStatePanel.getY() + wifiStatePanel.getHeight() + gap);
         validate();
         repaint();
     }
@@ -174,7 +181,6 @@ public class WifiStatePanel extends JPanel {
         mainPanel = new JPanel();
 
         //======== this ========
-
         setLayout(new BorderLayout());
 
         //======== headerPanel ========
@@ -182,7 +188,7 @@ public class WifiStatePanel extends JPanel {
             headerPanel.setLayout(new BorderLayout());
 
             //---- label1 ----
-            label1.setText("This panel shows you the users connected on the Wi-Fi");
+            label1.setText("This panel shows you the users connected on the Switch");
             label1.setHorizontalAlignment(SwingConstants.CENTER);
             headerPanel.add(label1, BorderLayout.CENTER);
         }
@@ -190,7 +196,7 @@ public class WifiStatePanel extends JPanel {
 
         //======== mainPanel ========
         {
-            mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+            mainPanel.setLayout(new BorderLayout());
         }
         add(mainPanel, BorderLayout.CENTER);
         // JFormDesigner - End of component initialization  //GEN-END:initComponents

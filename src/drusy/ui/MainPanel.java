@@ -12,6 +12,7 @@ import aurelienribon.utils.Res;
 import aurelienribon.utils.SwingUtils;
 import aurelienribon.utils.VersionLabel;
 import drusy.ui.panels.InternetStatePanel;
+import drusy.ui.panels.SwitchStatePanel;
 import drusy.ui.panels.WifiStatePanel;
 import drusy.utils.Checker;
 import drusy.utils.Config;
@@ -23,11 +24,17 @@ import java.awt.event.*;
 import static aurelienribon.slidinglayout.SLSide.*;
 
 public class MainPanel extends PaintedPanel {
+    // SlidingLayout
+    private final SLPanel rootPanel = new SLPanel();
+    private final float transitionDuration = 0.5f;
+    private final int gap = 10;
+
 	// Panels
     private final TaskPanel taskPanel = new TaskPanel();
     private JFrame parentFrame;
     private InternetStatePanel internetStatePanel = new InternetStatePanel(this);
     private WifiStatePanel wifiStatePanel = new WifiStatePanel();
+    private SwitchStatePanel switchStatePanel = new SwitchStatePanel(wifiStatePanel, gap);
 
 	// Start panel components
 	private final JLabel startLogoLabel = new JLabel(Res.getImage("img/freebox-v6-monitor-logo.png"));
@@ -38,11 +45,6 @@ public class MainPanel extends PaintedPanel {
     private final UpdateLabel updateLabel = new UpdateLabel();
     private final VersionLabel versionLabel = new VersionLabel();
 	private final Button changeModeBtn = new Button() {{setText("Back");}};
-
-	// SlidingLayout
-	private final SLPanel rootPanel = new SLPanel();
-	private final float transitionDuration = 0.5f;
-	private final int gap = 10;
 
 	public MainPanel(JFrame frame) {
 		SwingUtils.importFont(Res.getStream("fonts/SquareFont.ttf"));
@@ -118,6 +120,7 @@ public class MainPanel extends PaintedPanel {
 		Style.registerCssClasses(this, ".rootPanel");
         Style.registerCssClasses(internetStatePanel, ".groupPanel", "#internetStatePanel");
         Style.registerCssClasses(wifiStatePanel, ".groupPanel", "#wifiStatePanel");
+        Style.registerCssClasses(switchStatePanel, ".groupPanel", "#switchStatePanel");
 		Style.registerCssClasses(startMonitorBtn, ".startButton");
 		Style.registerCssClasses(startWebviewBtn, ".startButton");
 		Style.registerCssClasses(changeModeBtn, ".bold", ".center");
@@ -126,7 +129,7 @@ public class MainPanel extends PaintedPanel {
 
 		Component[] targets = new Component[] {
 			this, taskPanel, changeModeBtn, startMonitorBtn, startWebviewBtn, versionLabel, updateLabel,
-                internetStatePanel, wifiStatePanel
+                internetStatePanel, wifiStatePanel, switchStatePanel
 		};
 
 		Style style = new Style(Res.getUrl("css/style.css"));
@@ -177,8 +180,10 @@ public class MainPanel extends PaintedPanel {
                 .endGrid()
                 .beginGrid(0, 1)
                     .row(wifiStatePanel.getPreferredSize().height)
+                    .row(switchStatePanel.getPreferredSize().height)
                     .col(1f)
                     .place(0, 0, wifiStatePanel)
+                    .place(1, 0, switchStatePanel)
                 .endGrid()
                 .beginGrid(0, 2)
                     .row(1f)
@@ -204,6 +209,7 @@ public class MainPanel extends PaintedPanel {
 	public void showMonitorView() {
         internetStatePanel.updatePeriodically();
         wifiStatePanel.updatePeriodically();
+        switchStatePanel.updatePeriodically();
 
         rootPanel.createTransition()
 			.push(new SLKeyframe(monitorCfg, transitionDuration)

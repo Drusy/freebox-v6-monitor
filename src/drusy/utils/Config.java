@@ -27,6 +27,8 @@ public class Config {
     public static String FREEBOX_API_AUTHORIZE = "http://mafreebox.freebox.fr/api/v3/login/authorize";
     public static String FREEBOX_API_WIFI_ID = "http://mafreebox.freebox.fr/api/v2/wifi/ap";
     public static String FREEBOX_API_WIFI_STATIONS = "http://mafreebox.freebox.fr/api/v2/wifi/ap/{id}/stations";
+    public static String FREEBOX_API_SWITCH_STATUS = "http://mafreebox.freebox.fr/api/v3/switch/status/";
+    public static String FREEBOX_API_SWITCH_ID = "http://mafreebox.freebox.fr/api/v3/switch/port/{id}/stats";
     public static String FREEBOX_URL = "http://mafreebox.freebox.fr";
 
     private static void CreateConfigFile() {
