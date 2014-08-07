@@ -7,12 +7,15 @@ package drusy.ui.panels;
 import javax.swing.border.*;
 import aurelienribon.ui.css.Style;
 import aurelienribon.utils.HttpUtils;
+import aurelienribon.utils.Res;
 import drusy.utils.Config;
 import drusy.utils.Log;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,7 +36,7 @@ public class WifiStatePanel extends JPanel {
     }
 
     public void updatePeriodically() {
-        long delay = 5000 * 2;
+        long delay = 1000 * 2;
 
         timer = new java.util.Timer();
 
@@ -95,8 +98,12 @@ public class WifiStatePanel extends JPanel {
                     for (int i = 0; i < usersList.length(); ++i) {
                         JSONObject user = usersList.getJSONObject(i);
                         final String hostname = user.getString("hostname");
+                        final long txBytes = user.getLong("tx_rate");
+                        final long rxBytes = user.getLong("rx_rate");
+                        JSONObject host = user.getJSONObject("host");
+                        final String host_type = host.getString("host_type");
 
-                        addUser("Image", hostname);
+                        addUser(host_type, hostname, txBytes, rxBytes);
                     }
                 } else {
                     String msg = obj.getString("msg");
@@ -113,32 +120,38 @@ public class WifiStatePanel extends JPanel {
         });
     }
 
-    private void addUser(String picture, String information) {
+    private void addUser(String hostName, String information, long txBytes, long rxBytes) {
         JPanel panel = new JPanel();
-        JLabel pictureLabel = new JLabel();
         JLabel informationLabel = new JLabel();
+        ImageIcon imageIcon;
 
         //======== panel1 ========
         {
             panel.setLayout(new BorderLayout());
+            panel.setBorder(new EmptyBorder(0, 10, 0, 10));
 
             //---- label2 ----
-            pictureLabel.setText(picture);
-            pictureLabel.setHorizontalAlignment(SwingConstants.CENTER);
-            panel.add(pictureLabel, BorderLayout.WEST);
-
-            //---- label3 ----
-            informationLabel.setText(information);
+            if (hostName.equals("smartphone")) {
+                imageIcon = Res.getImage("img/iphone-56.png");
+            } else {
+                imageIcon = Res.getImage("img/mac-56.png");
+            }
+            informationLabel.setIcon(imageIcon);
+            informationLabel.setText("<html><b>" + information + "</b><br />Download: " + txBytes / 1000.0 + " ko/s <br />Upload: " + rxBytes / 1000.0 + " ko/s</html>");
             informationLabel.setHorizontalAlignment(SwingConstants.CENTER);
             panel.add(informationLabel, BorderLayout.CENTER);
         }
         mainPanel.add(panel);
+        adaptPanelSize();
+
+        users.add(panel);
+    }
+
+    private void adaptPanelSize() {
         mainPanel.setSize(mainPanel.getWidth(), (int)mainPanel.getPreferredSize().getHeight());
         setSize(getWidth(), (int)getPreferredSize().getHeight());
         validate();
         repaint();
-
-        users.add(panel);
     }
 
     private void clearUsers() {
@@ -165,7 +178,7 @@ public class WifiStatePanel extends JPanel {
             headerPanel.setLayout(new BorderLayout());
 
             //---- label1 ----
-            label1.setText("This panel shows you the Wi-Fi state");
+            label1.setText("This panel shows you the users connected on the Wi-Fi");
             label1.setHorizontalAlignment(SwingConstants.CENTER);
             headerPanel.add(label1, BorderLayout.CENTER);
         }

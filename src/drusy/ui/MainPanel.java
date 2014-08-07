@@ -66,7 +66,6 @@ public class MainPanel extends PaintedPanel {
         SwingUtils.addWindowListener(this, new WindowAdapter() {
 			@Override
 			public void windowOpened(WindowEvent e) {
-                //Checker.CheckVersion();
                 Checker.CheckFreeboxUp(parentFrame);
             }
 

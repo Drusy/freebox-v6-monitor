@@ -9,7 +9,7 @@ new FormModel {
 				name: "headerPanel"
 				add( new FormComponent( "javax.swing.JLabel" ) {
 					name: "label1"
-					"text": "This panel shows you the Wi-Fi state"
+					"text": "This panel shows you the users connected on the Wi-Fi"
 					"horizontalAlignment": 0
 				}, new FormLayoutConstraints( class java.lang.String ) {
 					"value": "Center"
