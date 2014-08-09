@@ -2,6 +2,7 @@ package drusy;
 
 import aurelienribon.ui.components.ArStyle;
 import aurelienribon.ui.css.swing.SwingStyle;
+import aurelienribon.utils.Res;
 import drusy.ui.MainPanel;
 import drusy.utils.Config;
 
@@ -30,6 +31,8 @@ public class Main {
                 frame.setMinimumSize(new Dimension(Config.APP_WITH, Config.APP_HEIGHT));
 				frame.setLocationRelativeTo(null);
 				frame.setVisible(true);
+
+                frame.setIconImage(Res.getImage("img/world-hand.png").getImage());
 			}
 		});
 	}

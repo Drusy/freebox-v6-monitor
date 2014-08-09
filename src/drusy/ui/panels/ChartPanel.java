@@ -81,6 +81,7 @@ public class ChartPanel extends JPanel {
         plot.getAxisRenderer(XYPlot.AXIS_Y).setTickLabelDistance(0.5);
         plot.getAxisRenderer(XYPlot.AXIS_Y).setLabelDistance(1.25);
         plot.getAxis(XYPlot.AXIS_Y).setMax(maxByteRate);
+        plot.getAxis(XYPlot.AXIS_Y).setMin(0);
 
         // Manage axis X
         plot.getAxisRenderer(XYPlot.AXIS_X).setLabel("time");
