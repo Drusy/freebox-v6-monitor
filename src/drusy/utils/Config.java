@@ -1,5 +1,6 @@
 package drusy.utils;
 
+import java.awt.*;
 import java.io.*;
 import java.util.Properties;
 
@@ -14,6 +15,12 @@ public class Config {
     public static float CURRENT_VERSION = 1.0f;
     public static int APP_WITH = 1100;
     public static int APP_HEIGHT = 600;
+    public static int GAP = 10;
+
+    // Charts config
+    public static int CHART_HEIGHT = 135;
+    public static Color DOWNLOAD_CHART_COLOR = new Color(0.30980393f, 0.70980394f, 0.8117647f);
+    public static Color UPLOAD_CHART_COLOR = new Color(0.8117647f, 0.17254902f, 0.21568628f);
 
     // Github urls
     public static String DOWNLOAD_URL = "https://github.com/Drusy/freebox-v6-monitor/releases";

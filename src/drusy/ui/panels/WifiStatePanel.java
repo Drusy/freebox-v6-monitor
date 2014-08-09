@@ -49,7 +49,7 @@ public class WifiStatePanel extends JPanel {
             public void run() {
                 update();
             }
-        }, 0, delay);
+        }, 500, delay);
     }
 
     public void update() {

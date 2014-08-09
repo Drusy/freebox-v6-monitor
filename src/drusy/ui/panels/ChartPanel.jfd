@@ -9,10 +9,10 @@ new FormModel {
 				name: "headerPanel"
 				add( new FormComponent( "javax.swing.JLabel" ) {
 					name: "label1"
-					"text": "This panel shows you the users connected on the Switch"
+					"text": "This panel plot the byte rate charts"
 					"horizontalAlignment": 0
 				}, new FormLayoutConstraints( class java.lang.String ) {
-					"value": "Center"
+					"value": "North"
 				} )
 			}, new FormLayoutConstraints( class java.lang.String ) {
 				"value": "North"
@@ -26,7 +26,7 @@ new FormModel {
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 495, 280 )
+			"size": new java.awt.Dimension( 525, 260 )
 		} )
 	}
 }

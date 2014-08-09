@@ -22,12 +22,16 @@ import javax.swing.*;
  */
 public class InternetStatePanel extends JPanel {
     private MainPanel parentPanel;
+    private ChartPanel downloadChartPanel;
+    private ChartPanel uploadChartPanel;
     private java.util.Timer timer;
 
-    public InternetStatePanel(final MainPanel parentPanel) {
+    public InternetStatePanel(final MainPanel parentPanel, final ChartPanel downloadChartPanel, final ChartPanel uploadChartPanel) {
         initComponents();
 
         this.parentPanel = parentPanel;
+        this.uploadChartPanel = uploadChartPanel;
+        this.downloadChartPanel = downloadChartPanel;
 
         Style.registerCssClasses(headerPanel, ".header");
     }
@@ -64,6 +68,9 @@ public class InternetStatePanel extends JPanel {
                     String state = result.getString("state");
                     int bandwidth_up = result.getInt("bandwidth_up");
                     int bandwidth_down = result.getInt("bandwidth_down");
+
+                    downloadChartPanel.addDataValue(rateDown / 1000.0, bandwidth_down / 8000.0);
+                    uploadChartPanel.addDataValue(rateUp / 1000.0, bandwidth_up / 8000.0);
 
                     ipv4ContentLabel.setText(ipv4);
                     ipv6ContentLabel.setText(ipv6);

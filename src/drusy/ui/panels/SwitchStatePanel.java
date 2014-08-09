@@ -27,15 +27,13 @@ public class SwitchStatePanel extends JPanel {
     private java.util.List<JPanel> users = new ArrayList<JPanel>();
     private java.util.Timer timer;
     private WifiStatePanel wifiStatePanel;
-    private int gap;
 
-    public SwitchStatePanel(WifiStatePanel wifiStatePanel, int gap) {
+    public SwitchStatePanel(WifiStatePanel wifiStatePanel) {
         initComponents();
 
         setVisible(false);
 
         this.wifiStatePanel = wifiStatePanel;
-        this.gap = gap;
 
         Style.registerCssClasses(headerPanel, ".header");
     }
@@ -50,20 +48,20 @@ public class SwitchStatePanel extends JPanel {
             public void run() {
                 update();
             }
-        }, 500, delay);
+        }, 1000, delay);
     }
 
     public void update() {
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
         HttpUtils.DownloadGetTask task = HttpUtils.downloadGetAsync(Config.FREEBOX_API_SWITCH_STATUS, output, "Getting Switch status", false);
 
-        System.out.println("update");
         task.addListener(new HttpUtils.DownloadListener() {
             @Override public void onComplete() {
                 String json = output.toString();
                 JSONObject obj = new JSONObject(json);
                 boolean success = obj.getBoolean("success");
 
+                clearUsers();
                 if (success == true) {
                     JSONArray switchStatusArray = obj.getJSONArray("result");
 
@@ -107,7 +105,6 @@ public class SwitchStatePanel extends JPanel {
                 JSONObject obj = new JSONObject(json);
                 boolean success = obj.getBoolean("success");
 
-                clearUsers();
                 if (success == true) {
                     JSONObject result = obj.getJSONObject("result");
                     long txBytes = result.getLong("tx_bytes_rate");
@@ -160,7 +157,7 @@ public class SwitchStatePanel extends JPanel {
 
     private void adaptPanelSize() {
         setSize(getWidth(), (int) getPreferredSize().getHeight());
-        setLocation(getX(), wifiStatePanel.getY() + wifiStatePanel.getHeight() + gap);
+        setLocation(getX(), wifiStatePanel.getY() + wifiStatePanel.getHeight() + Config.GAP);
         validate();
         repaint();
     }
@@ -181,6 +178,7 @@ public class SwitchStatePanel extends JPanel {
         mainPanel = new JPanel();
 
         //======== this ========
+
         setLayout(new BorderLayout());
 
         //======== headerPanel ========
@@ -196,7 +194,7 @@ public class SwitchStatePanel extends JPanel {
 
         //======== mainPanel ========
         {
-            mainPanel.setLayout(new BorderLayout());
+            mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         }
         add(mainPanel, BorderLayout.CENTER);
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
