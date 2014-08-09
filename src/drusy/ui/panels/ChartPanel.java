@@ -34,11 +34,10 @@ import javax.swing.*;
 public class ChartPanel extends JPanel {
     private java.util.Timer timer;
     private XYPlot plot = null;
-    private InteractivePanel interactivePanel = null;
+    private volatile InteractivePanel interactivePanel = null;
     private DataTable data = new DataTable(Double.class, Double.class);
     private int maxDataCount = 100;
     private Color chartColor;
-    private Number maxByteRate;
     private int offset;
 
     public ChartPanel(String headerLabel, Color chartColor, final int offset) {
@@ -90,7 +89,7 @@ public class ChartPanel extends JPanel {
         plot.getAxisRenderer(XYPlot.AXIS_X).setLabelDistance(0.75);
         plot.getAxisRenderer(XYPlot.AXIS_X).setTickLabelFormat(new SimpleDateFormat("HH:mm"));
 
-        // Filles area
+        // Filled area
         formatFilledArea(plot, data, chartColor);
 
         // Add to panel

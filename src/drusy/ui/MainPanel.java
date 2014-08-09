@@ -45,7 +45,7 @@ public class MainPanel extends PaintedPanel {
 	private final Button startWebviewBtn = new Button() {{setText("Webview");}};
 
 	// Misc components
-    private final UpdateLabel updateLabel = new UpdateLabel();
+    private final UpdateLabel updateLabel = new UpdateLabel(internetStatePanel, wifiStatePanel, switchStatePanel);
     private final VersionLabel versionLabel = new VersionLabel();
 	private final Button changeModeBtn = new Button() {{setText("Back");}};
 

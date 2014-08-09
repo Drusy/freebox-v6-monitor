@@ -9,6 +9,7 @@ import aurelienribon.utils.HttpUtils;
 import aurelienribon.utils.Res;
 import drusy.utils.Config;
 import drusy.utils.Log;
+import drusy.utils.Updater;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -27,6 +28,7 @@ public class SwitchStatePanel extends JPanel {
     private java.util.List<JPanel> users = new ArrayList<JPanel>();
     private java.util.Timer timer;
     private WifiStatePanel wifiStatePanel;
+    private Updater.FakeUpdater fakeUpdater = new Updater.FakeUpdater();
 
     public SwitchStatePanel(WifiStatePanel wifiStatePanel) {
         initComponents();
@@ -46,12 +48,12 @@ public class SwitchStatePanel extends JPanel {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                update();
+                update(fakeUpdater);
             }
         }, 1000, delay);
     }
 
-    public void update() {
+    public void update(final Updater updater) {
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
         HttpUtils.DownloadGetTask task = HttpUtils.downloadGetAsync(Config.FREEBOX_API_SWITCH_STATUS, output, "Getting Switch status", false);
 
@@ -77,11 +79,13 @@ public class SwitchStatePanel extends JPanel {
                             addUsersForSwitchIdAndHostname(id, hostname);
                         }
                     }
-
-
                 } else {
                     String msg = obj.getString("msg");
                     Log.Debug("Freebox Switch status", msg);
+                }
+
+                if (updater != null) {
+                    updater.updated();
                 }
             }
         });
@@ -90,6 +94,10 @@ public class SwitchStatePanel extends JPanel {
             @Override
             public void onError(IOException ex) {
                 Log.Debug("Freebox Switch status", ex.getMessage());
+
+                if (updater != null) {
+                    updater.updated();
+                }
             }
         });
     }

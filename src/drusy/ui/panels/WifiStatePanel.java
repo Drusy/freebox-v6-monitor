@@ -10,6 +10,7 @@ import aurelienribon.utils.HttpUtils;
 import aurelienribon.utils.Res;
 import drusy.utils.Config;
 import drusy.utils.Log;
+import drusy.utils.Updater;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -28,6 +29,7 @@ import javax.swing.*;
 public class WifiStatePanel extends JPanel {
     private java.util.List<JPanel> users = new ArrayList<JPanel>();
     private java.util.Timer timer;
+    private Updater.FakeUpdater fakeUpdater = new Updater.FakeUpdater();
 
     public WifiStatePanel() {
         initComponents();
@@ -47,12 +49,12 @@ public class WifiStatePanel extends JPanel {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                update();
+                update(fakeUpdater);
             }
         }, 500, delay);
     }
 
-    public void update() {
+    public void update(final Updater updater) {
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
         HttpUtils.DownloadGetTask task = HttpUtils.downloadGetAsync(Config.FREEBOX_API_WIFI_ID, output, "Getting WiFi id", false);
 
@@ -67,7 +69,7 @@ public class WifiStatePanel extends JPanel {
                     JSONObject wifi = result.getJSONObject(0);
                     int id = wifi.getInt("id");
 
-                    addUsersForWifiId(id);
+                    addUsersForWifiId(id, updater);
 
                 } else {
                     String msg = obj.getString("msg");
@@ -84,7 +86,7 @@ public class WifiStatePanel extends JPanel {
         });
     }
 
-    public void addUsersForWifiId(int id) {
+    public void addUsersForWifiId(int id, final Updater updater) {
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
         String statement = Config.FREEBOX_API_WIFI_STATIONS.replace("{id}", String.valueOf(id));
         HttpUtils.DownloadGetTask task = HttpUtils.downloadGetAsync(statement, output, "Getting WiFi id", false);
@@ -113,6 +115,10 @@ public class WifiStatePanel extends JPanel {
                     String msg = obj.getString("msg");
                     Log.Debug("Freebox Wi-Fi State (get users)", msg);
                 }
+
+                if (updater != null) {
+                    updater.updated();
+                }
             }
         });
 
@@ -120,6 +126,10 @@ public class WifiStatePanel extends JPanel {
             @Override
             public void onError(IOException ex) {
                 Log.Debug("Freebox Wi-Fi State (get users)", ex.getMessage());
+
+                if (updater != null) {
+                    updater.updated();
+                }
             }
         });
     }

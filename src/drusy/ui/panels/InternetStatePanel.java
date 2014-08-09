@@ -9,6 +9,7 @@ import aurelienribon.utils.HttpUtils;
 import drusy.ui.MainPanel;
 import drusy.utils.Config;
 import drusy.utils.Log;
+import drusy.utils.Updater;
 import org.json.JSONObject;
 
 import java.awt.*;
@@ -25,6 +26,7 @@ public class InternetStatePanel extends JPanel {
     private ChartPanel downloadChartPanel;
     private ChartPanel uploadChartPanel;
     private java.util.Timer timer;
+    private Updater.FakeUpdater fakeUpdater = new Updater.FakeUpdater();
 
     public InternetStatePanel(final MainPanel parentPanel, final ChartPanel downloadChartPanel, final ChartPanel uploadChartPanel) {
         initComponents();
@@ -44,12 +46,12 @@ public class InternetStatePanel extends JPanel {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                update();
+                update(fakeUpdater);
             }
         }, 0, delay);
     }
 
-    public void update() {
+    public void update(final Updater updater) {
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
         HttpUtils.DownloadGetTask task = HttpUtils.downloadGetAsync(Config.FREEBOX_API_CONNECTION, output, "Fetching connection state", false);
 
@@ -83,6 +85,10 @@ public class InternetStatePanel extends JPanel {
                     String msg = obj.getString("msg");
                     Log.Debug("Freebox Connection State", msg);
                 }
+
+                if (updater != null) {
+                    updater.updated();
+                }
             }
         });
 
@@ -90,6 +96,10 @@ public class InternetStatePanel extends JPanel {
             @Override
             public void onError(IOException ex) {
                 Log.Debug("Freebox Connection State", ex.getMessage());
+
+                if (updater != null) {
+                    updater.updated();
+                }
             }
         });
     }
