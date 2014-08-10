@@ -55,6 +55,7 @@ public class AlertPanel extends JPanel {
         vSpacer1 = new JPanel(null);
 
         //======== this ========
+
         setLayout(new BorderLayout());
 
         //======== headerPanel ========

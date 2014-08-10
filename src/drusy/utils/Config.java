@@ -12,7 +12,7 @@ public class Config {
     // App informations
     public static String APP_NAME = "Freebox v6 Monitor";
     public static String APP_ID = "fr.drusy.freeboxmonitor";
-    public static float CURRENT_VERSION = 1.0f;
+    public static float CURRENT_VERSION = 1.1f;
     public static int APP_WITH = 1100;
     public static int APP_HEIGHT = 600;
     public static int GAP = 10;
