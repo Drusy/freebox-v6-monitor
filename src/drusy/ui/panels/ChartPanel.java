@@ -35,9 +35,9 @@ import javax.swing.*;
  */
 public class ChartPanel extends JPanel {
     private java.util.Timer timer;
+    private DataTable data = null;
     private XYPlot plot = null;
-    private volatile InteractivePanel interactivePanel = null;
-    private DataTable data = new DataTable(Double.class, Double.class);
+    private InteractivePanel interactivePanel = null;
     private int maxDataCount = 100;
     private Number maxByteRate = 1000;
     private Color chartColor;
@@ -48,8 +48,43 @@ public class ChartPanel extends JPanel {
 
         this.chartColor = chartColor;
         this.offset = offset;
-
         label1.setText(headerLabel);
+
+        data = new DataTable(Double.class, Double.class);
+        data.add((double)(new Date().getTime()), 0d);
+        plot = new XYPlot(data);
+
+        // Chart spacing
+        double insetsTop = 10.0,
+                insetsLeft = 60.0,
+                insetsBottom = 60.0,
+                insetsRight = 10.0;
+        plot.setInsets(new Insets2D.Double(
+                insetsTop, insetsLeft, insetsBottom, insetsRight));
+
+        // Hide points
+        plot.setPointRenderer(data, null);
+
+        // Filled area
+        formatFilledArea(plot, data, chartColor);
+
+        // Manage axis Y
+        plot.getAxisRenderer(XYPlot.AXIS_Y).setLabel("ko/s");
+        plot.getAxisRenderer(XYPlot.AXIS_Y).setTicksVisible(true);
+        plot.getAxisRenderer(XYPlot.AXIS_Y).setTickLabelDistance(0.5);
+        plot.getAxisRenderer(XYPlot.AXIS_Y).setLabelDistance(1.25);
+        plot.getAxis(XYPlot.AXIS_Y).setMin(0);
+        plot.getAxis(XYPlot.AXIS_Y).setMax(0);
+
+        // Manage axis X
+        plot.getAxisRenderer(XYPlot.AXIS_X).setLabel("time");
+        plot.getAxisRenderer(XYPlot.AXIS_X).setTicksVisible(true);
+        plot.getAxisRenderer(XYPlot.AXIS_X).setTickLabelDistance(0.5);
+        plot.getAxisRenderer(XYPlot.AXIS_X).setLabelDistance(0.75);
+        plot.getAxisRenderer(XYPlot.AXIS_X).setTickLabelFormat(new SimpleDateFormat("HH:mm"));
+
+        InteractivePanel interactivePanel = new InteractivePanel(plot);
+        mainPanel.add(interactivePanel);
 
         Style.registerCssClasses(headerPanel, ".header");
     }
@@ -64,46 +99,12 @@ public class ChartPanel extends JPanel {
     }
 
     private void updateInteractivePanel(DataTable data, Number maxByteRate) {
-        plot = new XYPlot(data);
-
-        // Hide points
-        plot.setPointRenderer(data, null);
-
-        // Chart spacing
-        double insetsTop = 10.0,
-                insetsLeft = 60.0,
-                insetsBottom = 60.0,
-                insetsRight = 10.0;
-        plot.setInsets(new Insets2D.Double(
-                insetsTop, insetsLeft, insetsBottom, insetsRight));
-
-        // Manage axis Y
-        plot.getAxisRenderer(XYPlot.AXIS_Y).setLabel("ko/s");
-        plot.getAxisRenderer(XYPlot.AXIS_Y).setTicksVisible(true);
-        plot.getAxisRenderer(XYPlot.AXIS_Y).setTickLabelDistance(0.5);
-        plot.getAxisRenderer(XYPlot.AXIS_Y).setLabelDistance(1.25);
         plot.getAxis(XYPlot.AXIS_Y).setMin(0);
-
         if (maxByteRate.intValue() > 0) {
             plot.getAxis(XYPlot.AXIS_Y).setMax(maxByteRate);
         } else {
             plot.getAxis(XYPlot.AXIS_Y).setMax(this.maxByteRate);
         }
-
-        // Manage axis X
-        plot.getAxisRenderer(XYPlot.AXIS_X).setLabel("time");
-        plot.getAxisRenderer(XYPlot.AXIS_X).setTicksVisible(true);
-        plot.getAxisRenderer(XYPlot.AXIS_X).setTickLabelDistance(0.5);
-        plot.getAxisRenderer(XYPlot.AXIS_X).setLabelDistance(0.75);
-        plot.getAxisRenderer(XYPlot.AXIS_X).setTickLabelFormat(new SimpleDateFormat("HH:mm"));
-
-        // Filled area
-        formatFilledArea(plot, data, chartColor);
-
-        // Add to panel
-        mainPanel.removeAll();
-        interactivePanel = new InteractivePanel(plot);
-        mainPanel.add(interactivePanel);
     }
 
     private void formatFilledArea(XYPlot plot, DataSource data, Color color) {
