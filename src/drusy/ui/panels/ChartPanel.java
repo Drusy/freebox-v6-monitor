@@ -133,7 +133,7 @@ public class ChartPanel extends JPanel {
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
-        // Generated using JFormDesigner Evaluation license - Kevin Renella
+        // Generated using JFormDesigner Evaluation license - KÃ©vin Renella
         headerPanel = new JPanel();
         label1 = new JLabel();
         mainPanel = new JPanel();
@@ -162,7 +162,7 @@ public class ChartPanel extends JPanel {
     }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
-    // Generated using JFormDesigner Evaluation license - Kevin Renella
+    // Generated using JFormDesigner Evaluation license - KÃ©vin Renella
     private JPanel headerPanel;
     private JLabel label1;
     private JPanel mainPanel;

@@ -39,6 +39,9 @@ public class Config {
     public static String FREEBOX_API_SWITCH_ID = "http://mafreebox.freebox.fr/api/v3/switch/port/{id}/stats";
     public static String FREEBOX_API_XDSL = "http://mafreebox.freebox.fr/api/v3/connection/xdsl";
 
+    // Alerts
+    public static float ALERT_MAX_RATE_PCT = 0.9f;
+
     private static void CreateConfigFile() {
         String homePath = System.getProperty("user.home");
         File configFile = new File(homePath + "/" + CONFIG_FOLDER + "/" + "config.properties");

@@ -30,11 +30,14 @@ public class InternetStatePanel extends JPanel {
     private ChartPanel uploadChartPanel;
     private java.util.Timer timer;
     private Updater.FakeUpdater fakeUpdater = new Updater.FakeUpdater();
+    private AlertPanel alertPanel;
 
-    public InternetStatePanel(final MainPanel parentPanel, final ChartPanel downloadChartPanel, final ChartPanel uploadChartPanel) {
+    public InternetStatePanel(final MainPanel parentPanel, final ChartPanel downloadChartPanel,
+                              final ChartPanel uploadChartPanel, final AlertPanel alertPanel) {
         initComponents();
 
         this.parentPanel = parentPanel;
+        this.alertPanel = alertPanel;
         this.uploadChartPanel = uploadChartPanel;
         this.downloadChartPanel = downloadChartPanel;
 
@@ -110,6 +113,8 @@ public class InternetStatePanel extends JPanel {
                     int bandwidth_up = result.getInt("bandwidth_up");
                     int bandwidth_down = result.getInt("bandwidth_down");
 
+                    checkNotifs(rateDown, rateUp, bandwidth_down, bandwidth_up);
+
                     downloadChartPanel.addDataValue(rateDown / 1000.0, bandwidth_down / 8000.0);
                     uploadChartPanel.addDataValue(rateUp / 1000.0, bandwidth_up / 8000.0);
 
@@ -141,6 +146,23 @@ public class InternetStatePanel extends JPanel {
                 }
             }
         });
+    }
+
+    private void checkNotifs(double rateDown, double rateUp, double bandwidth_down, double bandwidth_up) {
+        bandwidth_down = (bandwidth_down / 8000.0) * Config.ALERT_MAX_RATE_PCT;
+        bandwidth_up = (bandwidth_up / 8000.0) * Config.ALERT_MAX_RATE_PCT;
+        rateDown = (rateDown / 1000.0);
+        rateUp = (rateUp / 1000.0);
+
+        if (rateDown == 0) {
+            alertPanel.desynchronizedNotif();
+        } else if (rateDown >= bandwidth_down) {
+            alertPanel.downloadNotif();
+        } else if (rateUp >= bandwidth_up) {
+            alertPanel.uploadNotif();
+        } else {
+            alertPanel.anyNotif();
+        }
     }
 
     private String formatInterval(final long l)

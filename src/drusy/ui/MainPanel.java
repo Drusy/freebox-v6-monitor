@@ -30,9 +30,10 @@ public class MainPanel extends PaintedPanel {
 	// Panels
     private final TaskPanel taskPanel = new TaskPanel();
     private JFrame parentFrame;
+    private AlertPanel alertPanel = new AlertPanel();
     private ChartPanel downloadChartPanel = new ChartPanel("This panel plot the download byte rate", Config.DOWNLOAD_CHART_COLOR, 0);
     private ChartPanel uploadChartPanel = new ChartPanel("This panel plot the upload byte rate", Config.UPLOAD_CHART_COLOR, 1);
-    private InternetStatePanel internetStatePanel = new InternetStatePanel(this, downloadChartPanel, uploadChartPanel);
+    private InternetStatePanel internetStatePanel = new InternetStatePanel(this, downloadChartPanel, uploadChartPanel, alertPanel);
     private WifiStatePanel wifiStatePanel = new WifiStatePanel();
     private SwitchStatePanel switchStatePanel = new SwitchStatePanel(wifiStatePanel);
     private AboutPanel aboutPanel = new AboutPanel(this);
@@ -114,6 +115,7 @@ public class MainPanel extends PaintedPanel {
         Style.registerCssClasses(wifiStatePanel, ".groupPanel", "#wifiStatePanel");
         Style.registerCssClasses(switchStatePanel, ".groupPanel", "#switchStatePanel");
         Style.registerCssClasses(downloadChartPanel, ".groupPanel", "#downloadChartPanel");
+        Style.registerCssClasses(alertPanel, ".groupPanel", "#alertPanel");
         Style.registerCssClasses(aboutPanel, ".groupPanel", "#aboutPanel");
         Style.registerCssClasses(uploadChartPanel, ".groupPanel", "#uploadChartPanel");
 		Style.registerCssClasses(startMonitorBtn, ".startButton");
@@ -123,7 +125,8 @@ public class MainPanel extends PaintedPanel {
 
 		Component[] targets = new Component[] {
 			this, taskPanel, changeModeBtn, startMonitorBtn, versionLabel, updateLabel,
-                internetStatePanel, wifiStatePanel, switchStatePanel, downloadChartPanel, uploadChartPanel, aboutPanel
+                internetStatePanel, wifiStatePanel, switchStatePanel, downloadChartPanel, uploadChartPanel, aboutPanel,
+                alertPanel
 		};
 
 		Style style = new Style(Res.getUrl("css/style.css"));
@@ -164,12 +167,14 @@ public class MainPanel extends PaintedPanel {
                 .row(1f).col(1f).col(1f).col(1f)
                 .beginGrid(0, 0)
                     .row(internetStatePanel.getPreferredSize().height)
+                    .row(alertPanel.getPreferredSize().height)
                     .row(versionLabel.getPreferredSize().height)
                     .row(updateLabel.getPreferredSize().height)
                     .col(1f)
                     .place(0, 0, internetStatePanel)
-                    .place(1, 0, versionLabel)
-                    .place(2, 0, updateLabel)
+                    .place(1, 0, alertPanel)
+                    .place(2, 0, versionLabel)
+                    .place(3, 0, updateLabel)
                 .endGrid()
                 .beginGrid(0, 1)
                     .row(wifiStatePanel.getPreferredSize().height)

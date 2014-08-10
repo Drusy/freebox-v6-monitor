@@ -78,6 +78,7 @@ aurelienribon-ui-CompactCheckBox:disabled {
 
 #internetStatePanel {-ar-border-title: "Internet State";}
 #wifiStatePanel {-ar-border-title: "Wi-Fi State";}
+#alertPanel {-ar-border-title: "Alert Panel";}
 #switchStatePanel {-ar-border-title: "Switch State";}
 #downloadChartPanel {-ar-border-title: "Download Chart";}
 #uploadChartPanel {-ar-border-title: "Upload Chart";}
