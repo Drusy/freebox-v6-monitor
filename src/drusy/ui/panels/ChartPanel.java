@@ -84,6 +84,8 @@ public class ChartPanel extends JPanel {
         plot.getAxisRenderer(XYPlot.AXIS_X).setTickLabelFormat(new SimpleDateFormat("HH:mm"));
 
         InteractivePanel interactivePanel = new InteractivePanel(plot);
+        interactivePanel.setZoomable(false);
+        interactivePanel.setPannable(false);
         mainPanel.add(interactivePanel);
 
         Style.registerCssClasses(headerPanel, ".header");

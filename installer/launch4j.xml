@@ -3,7 +3,7 @@
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
   <jar>C:\Users\Drusy\Dropbox\GitHub\freebox-v6-monitor\freebox-v6-monitor.jar</jar>
-  <outfile>C:\Users\Drusy\Downloads\freebox-v6-monitor.exe</outfile>
+  <outfile>C:\Users\Drusy\Dropbox\GitHub\freebox-v6-monitor\installer\freebox-v6-monitor.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
   <chdir>.</chdir>
