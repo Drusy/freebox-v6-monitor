@@ -11,10 +11,7 @@ import aurelienribon.ui.css.Style;
 import aurelienribon.utils.Res;
 import aurelienribon.utils.SwingUtils;
 import aurelienribon.utils.VersionLabel;
-import drusy.ui.panels.ChartPanel;
-import drusy.ui.panels.InternetStatePanel;
-import drusy.ui.panels.SwitchStatePanel;
-import drusy.ui.panels.WifiStatePanel;
+import drusy.ui.panels.*;
 import drusy.utils.Checker;
 import drusy.utils.Config;
 
@@ -38,11 +35,11 @@ public class MainPanel extends PaintedPanel {
     private InternetStatePanel internetStatePanel = new InternetStatePanel(this, downloadChartPanel, uploadChartPanel);
     private WifiStatePanel wifiStatePanel = new WifiStatePanel();
     private SwitchStatePanel switchStatePanel = new SwitchStatePanel(wifiStatePanel);
+    private AboutPanel aboutPanel = new AboutPanel(this);
 
 	// Start panel components
 	private final JLabel startLogoLabel = new JLabel(Res.getImage("img/freebox-v6-monitor-logo.png"));
-	private final Button startMonitorBtn = new Button() {{setText("Monitor");}};
-	private final Button startWebviewBtn = new Button() {{setText("Webview");}};
+	private final Button startMonitorBtn = new Button() {{setText("Start Monitoring");}};
 
 	// Misc components
     private final UpdateLabel updateLabel = new UpdateLabel(internetStatePanel, wifiStatePanel, switchStatePanel);
@@ -87,14 +84,6 @@ public class MainPanel extends PaintedPanel {
                 showMonitorView();
             }
         });
-
-		startWebviewBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                showWebView();
-            }
-        });
-
 		changeModeBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -110,7 +99,7 @@ public class MainPanel extends PaintedPanel {
 
         aboutLabel.addMouseListener(new MouseAdapter() {
             @Override public void mousePressed(MouseEvent e) {
-                //showAboutPanel();
+                showAboutPanel();
             }
         });
 	}
@@ -125,16 +114,16 @@ public class MainPanel extends PaintedPanel {
         Style.registerCssClasses(wifiStatePanel, ".groupPanel", "#wifiStatePanel");
         Style.registerCssClasses(switchStatePanel, ".groupPanel", "#switchStatePanel");
         Style.registerCssClasses(downloadChartPanel, ".groupPanel", "#downloadChartPanel");
+        Style.registerCssClasses(aboutPanel, ".groupPanel", "#aboutPanel");
         Style.registerCssClasses(uploadChartPanel, ".groupPanel", "#uploadChartPanel");
 		Style.registerCssClasses(startMonitorBtn, ".startButton");
-		Style.registerCssClasses(startWebviewBtn, ".startButton");
 		Style.registerCssClasses(changeModeBtn, ".bold", ".center");
         Style.registerCssClasses(versionLabel, ".versionLabel");
         Style.registerCssClasses(updateLabel, ".versionLabel");
 
 		Component[] targets = new Component[] {
-			this, taskPanel, changeModeBtn, startMonitorBtn, startWebviewBtn, versionLabel, updateLabel,
-                internetStatePanel, wifiStatePanel, switchStatePanel, downloadChartPanel, uploadChartPanel
+			this, taskPanel, changeModeBtn, startMonitorBtn, versionLabel, updateLabel,
+                internetStatePanel, wifiStatePanel, switchStatePanel, downloadChartPanel, uploadChartPanel, aboutPanel
 		};
 
 		Style style = new Style(Res.getUrl("css/style.css"));
@@ -145,7 +134,7 @@ public class MainPanel extends PaintedPanel {
 	// -------------------------------------------------------------------------
 	// Configurations
 	// -------------------------------------------------------------------------
-	private SLConfig initCfg, monitorCfg, webviewCfg;
+	private SLConfig initCfg, monitorCfg, webviewCfg, aboutCfg;
 
 	private void initConfigurations() {
 		initCfg = new SLConfig(rootPanel)
@@ -159,11 +148,10 @@ public class MainPanel extends PaintedPanel {
 				.place(1, 0, startLogoLabel)
 				.beginGrid(2, 0)
 					.row(1f).row(1f).row(1f)
-					.col(1f).col(2.5f).col(1f)
+					.col(1f).col(1f).col(1f)
 					.beginGrid(1, 1)
-						.row(1f).col(1f).col(10).col(1f)
+						.row(1f).col(1f)
 						.place(0, 0, startMonitorBtn)
-						.place(0, 2, startWebviewBtn)
 					.endGrid()
 				.endGrid()
 			.endGrid()
@@ -204,15 +192,19 @@ public class MainPanel extends PaintedPanel {
 				.place(0, 1, taskPanel)
 			.endGrid();
 
-		webviewCfg = new SLConfig(rootPanel)
-            .gap(gap, gap)
-            .row(1f).row(30).col(1f)
-            .beginGrid(1, 0)
-                .row(1f).col(100).col(1f)
-                .place(0, 0, changeModeBtn)
-                .place(0, 1, taskPanel)
-            .endGrid();
+        aboutCfg = new SLConfig(rootPanel)
+            .gap(250, 100)
+            .row(1f).col(1f)
+            .place(0, 0, aboutPanel);
 	}
+
+    public void showAboutPanel() {
+        rootPanel.createTransition()
+            .push(new SLKeyframe(aboutCfg, transitionDuration)
+                    .setEndSideForOldCmps(LEFT)
+                    .setStartSideForNewCmps(RIGHT))
+            .play();
+    }
 
 	public void showMonitorView() {
         internetStatePanel.updatePeriodically();
@@ -227,14 +219,13 @@ public class MainPanel extends PaintedPanel {
 			.play();
 	}
 
-	public void showWebView() {
-		rootPanel.createTransition()
-			.push(new SLKeyframe(webviewCfg, transitionDuration)
-				.setStartSideForNewCmps(RIGHT)
-				.setStartSide(LEFT, changeModeBtn)
-				.setEndSideForOldCmps(LEFT))
-			.play();
-	}
+    public void hideAboutPanel() {
+        rootPanel.createTransition()
+            .push(new SLKeyframe(monitorCfg, transitionDuration)
+                    .setEndSideForOldCmps(RIGHT)
+                    .setStartSideForNewCmps(LEFT))
+            .play();
+    }
 
 	public void showInitView() {
 		rootPanel.createTransition()

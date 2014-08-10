@@ -32,7 +32,7 @@ public class Main {
 				frame.setLocationRelativeTo(null);
 				frame.setVisible(true);
 
-                frame.setIconImage(Res.getImage("img/world-hand.png").getImage());
+                frame.setIconImage(Res.getImage("img/icon-monitor-64.png").getImage());
 			}
 		});
 	}

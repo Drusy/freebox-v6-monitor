@@ -28,6 +28,7 @@ public class Config {
 
     // Freebox urls
     public static String FREEBOX_API_VERSION_URL = "http://mafreebox.freebox.fr/api_version";
+    public static String FREEBOX_URL = "http://mafreebox.freebox.fr";
     public static String FREEBOX_API_CHECK_URL = "http://mafreebox.freebox.fr/api/v3/login";
     public static String FREEBOX_API_SESSION_TOKEN = "http://mafreebox.freebox.fr/api/v3/login/session";
     public static String FREEBOX_API_CONNECTION = "http://mafreebox.freebox.fr/api/v3/connection";
@@ -36,7 +37,7 @@ public class Config {
     public static String FREEBOX_API_WIFI_STATIONS = "http://mafreebox.freebox.fr/api/v2/wifi/ap/{id}/stations";
     public static String FREEBOX_API_SWITCH_STATUS = "http://mafreebox.freebox.fr/api/v3/switch/status/";
     public static String FREEBOX_API_SWITCH_ID = "http://mafreebox.freebox.fr/api/v3/switch/port/{id}/stats";
-    public static String FREEBOX_URL = "http://mafreebox.freebox.fr";
+    public static String FREEBOX_API_XDSL = "http://mafreebox.freebox.fr/api/v3/connection/xdsl";
 
     private static void CreateConfigFile() {
         String homePath = System.getProperty("user.home");

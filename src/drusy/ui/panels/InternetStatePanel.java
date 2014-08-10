@@ -15,7 +15,10 @@ import org.json.JSONObject;
 import java.awt.*;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 import javax.swing.*;
 
 /**
@@ -51,7 +54,43 @@ public class InternetStatePanel extends JPanel {
         }, 0, delay);
     }
 
-    public void update(final Updater updater) {
+    public void update(Updater updater) {
+        updateConnectionInformation(updater);
+        updateUptimeInformation();
+    }
+
+    private void updateUptimeInformation() {
+        final ByteArrayOutputStream output = new ByteArrayOutputStream();
+        HttpUtils.DownloadGetTask task = HttpUtils.downloadGetAsync(Config.FREEBOX_API_XDSL, output, "Fetching xdsl state", false);
+
+        task.addListener(new HttpUtils.DownloadListener() {
+            @Override public void onComplete() {
+                String json = output.toString();
+                JSONObject obj = new JSONObject(json);
+                boolean success = obj.getBoolean("success");
+
+                if (success == true) {
+                    JSONObject result = obj.getJSONObject("result");
+                    JSONObject status = result.getJSONObject("status");
+                    long uptime = status.getLong("uptime");
+
+                    uptimeContentLabel.setText(formatInterval(uptime));
+                } else {
+                    String msg = obj.getString("msg");
+                    Log.Debug("Freebox xdsl State", msg);
+                }
+            }
+        });
+
+        task.addListener(new HttpUtils.DownloadListener() {
+            @Override
+            public void onError(IOException ex) {
+                Log.Debug("Freebox xdsl State", ex.getMessage());
+            }
+        });
+    }
+
+    private void updateConnectionInformation(final Updater updater) {
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
         HttpUtils.DownloadGetTask task = HttpUtils.downloadGetAsync(Config.FREEBOX_API_CONNECTION, output, "Fetching connection state", false);
 
@@ -104,9 +143,17 @@ public class InternetStatePanel extends JPanel {
         });
     }
 
+    private String formatInterval(final long l)
+    {
+        final long hr = TimeUnit.SECONDS.toHours(l);
+        final long min = TimeUnit.SECONDS.toMinutes(l - TimeUnit.HOURS.toSeconds(hr));
+        final long sec = TimeUnit.SECONDS.toSeconds(l - TimeUnit.HOURS.toSeconds(hr) - TimeUnit.MINUTES.toSeconds(min));
+        return String.format("%02d hours %02d mins %02d secs", hr, min, sec);
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
-        // Generated using JFormDesigner Evaluation license - Kevin Renella
+        // Generated using JFormDesigner Evaluation license - KÃ©vin Renella
         headerPanel = new JPanel();
         label1 = new JLabel();
         mainPanel = new JPanel();
@@ -124,6 +171,8 @@ public class InternetStatePanel extends JPanel {
         uploadContentLabel = new JTextField();
         ipv6ContentLabel = new JTextField();
         ipv6TitleLabel = new JLabel();
+        uptimeContentLabel = new JTextField();
+        uptimeTitleLabel = new JLabel();
 
         //======== this ========
         setMinimumSize(new Dimension(100, 71));
@@ -209,6 +258,15 @@ public class InternetStatePanel extends JPanel {
             ipv6TitleLabel.setText("IP v6 :");
             ipv6TitleLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 
+            //---- uptimeContentLabel ----
+            uptimeContentLabel.setEditable(false);
+            uptimeContentLabel.setText("0 min");
+            uptimeContentLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+            //---- uptimeTitleLabel ----
+            uptimeTitleLabel.setText("Uptime :");
+            uptimeTitleLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+
             GroupLayout mainPanelLayout = new GroupLayout(mainPanel);
             mainPanel.setLayout(mainPanelLayout);
             mainPanelLayout.setHorizontalGroup(
@@ -222,7 +280,8 @@ public class InternetStatePanel extends JPanel {
                             .addComponent(maxUploadTitleLabel)
                             .addComponent(maxDownloadTitleLabel)
                             .addComponent(uploadTitleLabel)
-                            .addComponent(ipv6TitleLabel))
+                            .addComponent(ipv6TitleLabel)
+                            .addComponent(uptimeTitleLabel))
                         .addGap(10, 10, 10)
                         .addGroup(mainPanelLayout.createParallelGroup()
                             .addComponent(ipv4ContentLabel, GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE)
@@ -231,7 +290,8 @@ public class InternetStatePanel extends JPanel {
                             .addComponent(maxUploadContentLabel, GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE)
                             .addComponent(maxDownloadContentLabel, GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE)
                             .addComponent(uploadContentLabel, GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE)
-                            .addComponent(ipv6ContentLabel, GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE))
+                            .addComponent(ipv6ContentLabel, GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE)
+                            .addComponent(uptimeContentLabel, GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE))
                         .addContainerGap())
             );
             mainPanelLayout.setVerticalGroup(
@@ -239,8 +299,8 @@ public class InternetStatePanel extends JPanel {
                     .addGroup(mainPanelLayout.createSequentialGroup()
                         .addGap(20, 20, 20)
                         .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                            .addComponent(ipv4TitleLabel, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(ipv4ContentLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                .addComponent(ipv4TitleLabel, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(ipv4ContentLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                             .addComponent(ipv6TitleLabel, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
@@ -265,6 +325,10 @@ public class InternetStatePanel extends JPanel {
                         .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                             .addComponent(maxDownloadTitleLabel, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
                             .addComponent(maxDownloadContentLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                            .addComponent(uptimeTitleLabel, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(uptimeContentLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                         .addContainerGap())
             );
         }
@@ -273,7 +337,7 @@ public class InternetStatePanel extends JPanel {
     }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
-    // Generated using JFormDesigner Evaluation license - Kevin Renella
+    // Generated using JFormDesigner Evaluation license - KÃ©vin Renella
     private JPanel headerPanel;
     private JLabel label1;
     private JPanel mainPanel;
@@ -291,5 +355,7 @@ public class InternetStatePanel extends JPanel {
     private JTextField uploadContentLabel;
     private JTextField ipv6ContentLabel;
     private JLabel ipv6TitleLabel;
+    private JTextField uptimeContentLabel;
+    private JLabel uptimeTitleLabel;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }

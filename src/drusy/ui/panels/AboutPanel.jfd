@@ -1,0 +1,198 @@
+JFDML JFormDesigner: "5.2.0.0.109" Java: "1.7.0_40" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class javax.swing.BoxLayout ) {
+			"axis": 1
+		} ) {
+			name: "this"
+			"background": new java.awt.Color( 240, 240, 240, 0 )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class javax.swing.BoxLayout ) {
+				"axis": 1
+			} ) {
+				name: "mainPanel"
+				add( new FormComponent( "com.jformdesigner.designer.wrapper.VSpacer" ) {
+					name: "vSpacer1"
+					"maximumSize": new java.awt.Dimension( 37000, 20 )
+					"minimumSize": new java.awt.Dimension( 37000, 20 )
+					"preferredSize": new java.awt.Dimension( 37000, 20 )
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class javax.swing.BoxLayout ) {
+					"axis": 0
+				} ) {
+					name: "panel4"
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "label1"
+						"text": "Freebox v6 Monitor allow you to have a full overview of your Freebox Revolution."
+						"background": new java.awt.Color( 240, 240, 240, 0 )
+						"horizontalAlignment": 0
+					} )
+					add( new FormComponent( "com.jformdesigner.designer.wrapper.HSpacer" ) {
+						name: "hSpacer4"
+						"maximumSize": new java.awt.Dimension( 32700, 10 )
+					} )
+				} )
+				add( new FormComponent( "com.jformdesigner.designer.wrapper.VSpacer" ) {
+					name: "vSpacer3"
+					"maximumSize": new java.awt.Dimension( 37000, 20 )
+					"minimumSize": new java.awt.Dimension( 37000, 20 )
+					"preferredSize": new java.awt.Dimension( 37000, 20 )
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class javax.swing.BoxLayout ) {
+					"axis": 0
+				} ) {
+					name: "panel5"
+					"minimumSize": new java.awt.Dimension( 176, 0 )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "label2"
+						"text": "Core developed by Kevin Renella."
+						"background": new java.awt.Color( 240, 240, 240, 0 )
+					} )
+					add( new FormComponent( "com.jformdesigner.designer.wrapper.HSpacer" ) {
+						name: "hSpacer5"
+						"minimumSize": new java.awt.Dimension( 10, 2 )
+						"maximumSize": new java.awt.Dimension( 32767, 5 )
+					} )
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class javax.swing.BoxLayout ) {
+					"axis": 0
+				} ) {
+					name: "panel7"
+					"minimumSize": new java.awt.Dimension( 298, 0 )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "label3"
+						"text": "Swing GUI entirely base on Aurelien Ribon's CSS & libraries."
+						"background": new java.awt.Color( 240, 240, 240, 0 )
+					} )
+					add( new FormComponent( "com.jformdesigner.designer.wrapper.HSpacer" ) {
+						name: "hSpacer9"
+						"minimumSize": new java.awt.Dimension( 10, 2 )
+						"maximumSize": new java.awt.Dimension( 32767, 5 )
+					} )
+				} )
+				add( new FormComponent( "com.jformdesigner.designer.wrapper.VSpacer" ) {
+					name: "vSpacer4"
+					"maximumSize": new java.awt.Dimension( 37000, 20 )
+					"minimumSize": new java.awt.Dimension( 37000, 20 )
+					"preferredSize": new java.awt.Dimension( 37000, 20 )
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class javax.swing.BoxLayout ) {
+					"axis": 0
+				} ) {
+					name: "panel6"
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "label4"
+						"text": "Libraries & API used"
+						"font": new java.awt.Font( "Tahoma", 1, 11 )
+						"background": new java.awt.Color( 240, 240, 240, 0 )
+					} )
+					add( new FormComponent( "com.jformdesigner.designer.wrapper.HSpacer" ) {
+						name: "hSpacer8"
+						"maximumSize": new java.awt.Dimension( 32767, 15 )
+					} )
+				} )
+				add( new FormComponent( "com.jformdesigner.designer.wrapper.VSpacer" ) {
+					name: "vSpacer6"
+					"maximumSize": new java.awt.Dimension( 37000, 10 )
+					"minimumSize": new java.awt.Dimension( 37000, 10 )
+					"preferredSize": new java.awt.Dimension( 37000, 10 )
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class javax.swing.BoxLayout ) {
+					"axis": 0
+				} ) {
+					name: "panel1"
+					add( new FormComponent( "com.jformdesigner.designer.wrapper.HSpacer" ) {
+						name: "hSpacer2"
+						"maximumSize": new java.awt.Dimension( 10, 20 )
+					} )
+					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class javax.swing.BoxLayout ) {
+						"axis": 1
+					} ) {
+						name: "panel2"
+						add( new FormComponent( "javax.swing.JLabel" ) {
+							name: "cssEngineLabel"
+							"text": ":: CSS Engine for Swing"
+						} )
+						add( new FormComponent( "javax.swing.JLabel" ) {
+							name: "slidingLayoutLabel"
+							"text": ":: Sliding Layout for Swing"
+						} )
+						add( new FormComponent( "javax.swing.JLabel" ) {
+							name: "gralLabel"
+							"text": ":: GRAL Charts"
+						} )
+					} )
+					add( new FormComponent( "com.jformdesigner.designer.wrapper.HSpacer" ) {
+						name: "hSpacer3"
+						"maximumSize": new java.awt.Dimension( 32767, 20 )
+					} )
+					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class javax.swing.BoxLayout ) {
+						"axis": 1
+					} ) {
+						name: "panel3"
+						add( new FormComponent( "javax.swing.JLabel" ) {
+							name: "tweenEngineLabel"
+							"text": ":: Universal Tween Engine"
+						} )
+						add( new FormComponent( "javax.swing.JLabel" ) {
+							name: "aurelienRibonLabel"
+							"text": ":: Aurelien Ribon CSS"
+						} )
+						add( new FormComponent( "javax.swing.JLabel" ) {
+							name: "freeboxAPILabel"
+							"text": ":: Freebox v6 API"
+						} )
+					} )
+					add( new FormComponent( "com.jformdesigner.designer.wrapper.HSpacer" ) {
+						name: "hSpacer7"
+						"maximumSize": new java.awt.Dimension( 32767, 20 )
+					} )
+					add( new FormComponent( "com.jformdesigner.designer.wrapper.HSpacer" ) {
+						name: "hSpacer6"
+						"maximumSize": new java.awt.Dimension( 32767, 20 )
+					} )
+					add( new FormComponent( "com.jformdesigner.designer.wrapper.HSpacer" ) {
+						name: "hSpacer1"
+						"maximumSize": new java.awt.Dimension( 32767, 20 )
+					} )
+				} )
+				add( new FormComponent( "com.jformdesigner.designer.wrapper.VSpacer" ) {
+					name: "vSpacer2"
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class javax.swing.BoxLayout ) {
+					"axis": 0
+				} ) {
+					name: "panel8"
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "logoLabel"
+						"icon": new com.jformdesigner.model.SwingIcon( 0, "/res/img/icon-monitor-128.png" )
+					} )
+					add( new FormComponent( "com.jformdesigner.designer.wrapper.HSpacer" ) {
+						name: "hSpacer10"
+					} )
+					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class javax.swing.BoxLayout ) {
+						"axis": 1
+					} ) {
+						name: "panel10"
+						add( new FormComponent( "com.jformdesigner.designer.wrapper.VSpacer" ) {
+							name: "vSpacer5"
+							"maximumSize": new java.awt.Dimension( 10, 32767 )
+						} )
+						add( new FormComponent( "aurelienribon.ui.components.Button" ) {
+							name: "backButton"
+							"text": "Back to monitor"
+							"preferredSize": new java.awt.Dimension( 150, 35 )
+							"minimumSize": new java.awt.Dimension( 150, 35 )
+							"maximumSize": new java.awt.Dimension( 150, 35 )
+							"horizontalTextPosition": 0
+						} )
+					} )
+				} )
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 600, 355 )
+		} )
+	}
+}

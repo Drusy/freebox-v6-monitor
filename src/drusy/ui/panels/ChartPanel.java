@@ -14,7 +14,9 @@ import de.erichseifert.gral.plots.areas.DefaultAreaRenderer2D;
 import de.erichseifert.gral.plots.areas.LineAreaRenderer2D;
 import de.erichseifert.gral.plots.axes.AxisRenderer;
 import de.erichseifert.gral.plots.lines.DefaultLineRenderer2D;
+import de.erichseifert.gral.plots.lines.DiscreteLineRenderer2D;
 import de.erichseifert.gral.plots.lines.LineRenderer;
+import de.erichseifert.gral.plots.lines.SmoothLineRenderer2D;
 import de.erichseifert.gral.plots.points.DefaultPointRenderer2D;
 import de.erichseifert.gral.plots.points.PointRenderer;
 import de.erichseifert.gral.ui.InteractivePanel;
@@ -37,6 +39,7 @@ public class ChartPanel extends JPanel {
     private volatile InteractivePanel interactivePanel = null;
     private DataTable data = new DataTable(Double.class, Double.class);
     private int maxDataCount = 100;
+    private Number maxByteRate = 1000;
     private Color chartColor;
     private int offset;
 
@@ -79,8 +82,13 @@ public class ChartPanel extends JPanel {
         plot.getAxisRenderer(XYPlot.AXIS_Y).setTicksVisible(true);
         plot.getAxisRenderer(XYPlot.AXIS_Y).setTickLabelDistance(0.5);
         plot.getAxisRenderer(XYPlot.AXIS_Y).setLabelDistance(1.25);
-        plot.getAxis(XYPlot.AXIS_Y).setMax(maxByteRate);
         plot.getAxis(XYPlot.AXIS_Y).setMin(0);
+
+        if (maxByteRate.intValue() > 0) {
+            plot.getAxis(XYPlot.AXIS_Y).setMax(maxByteRate);
+        } else {
+            plot.getAxis(XYPlot.AXIS_Y).setMax(this.maxByteRate);
+        }
 
         // Manage axis X
         plot.getAxisRenderer(XYPlot.AXIS_X).setLabel("time");
@@ -93,9 +101,7 @@ public class ChartPanel extends JPanel {
         formatFilledArea(plot, data, chartColor);
 
         // Add to panel
-        if (interactivePanel != null) {
-            mainPanel.remove(interactivePanel);
-        }
+        mainPanel.removeAll();
         interactivePanel = new InteractivePanel(plot);
         mainPanel.add(interactivePanel);
     }
@@ -112,6 +118,8 @@ public class ChartPanel extends JPanel {
     }
 
     private void update(Number maxByteRate) {
+        this.maxByteRate = maxByteRate;
+
         updateInteractivePanel(data, maxByteRate);
         adaptPanelSize();
     }
